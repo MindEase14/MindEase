@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">MindEase</string>
+    <string name="welcome_to_mindease">Welcome to MindEase</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="student">Student</string>
+    <string name="admin">Admin</string>
+    <string name="mindease">MindEase</string>
+    <string name="student_registration">Student Registration</string>
+    <string name="name">Name</string>
+    <string name="id">ID</string>
+    <string name="age">Age</string>
+    <string name="gender">Gender</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="submit">Submit</string>
+    <string name="minimal_takers">Minimal Takers</string>
+    <string name="mild_takers">Mild Takers</string>
+    <string name="moderate_takers">Moderate Takers</string>
+    <string name="servere_takers">Servere Takers</string>
+    <string name="history">History</string>
+    <string name="employment_id">Employment ID</string>
+    <string name="_1_feeling_nervous_anxious_or_on_edge">1. Feeling nervous, anxious, or on edge</string>
+    <string name="next">Next</string>
+    <string name="prev">PREV</string>
+    <string name="clear">Clear</string>
+</resources>
