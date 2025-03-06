@@ -36,7 +36,7 @@
         tools:ignore="MissingConstraints" />
 
     <EditText
-        android:id="@+id/editText_Email"
+        android:id="@+id/adminLog1"
         android:layout_width="299dp"
         android:layout_height="46dp"
         android:layout_marginTop="20dp"
@@ -54,7 +54,7 @@
         tools:ignore="LabelFor,RtlSymmetry" />
 
     <EditText
-        android:id="@+id/edit_text_Password"
+        android:id="@+id/adminLog2"
         android:layout_width="299dp"
         android:layout_height="46dp"
         android:layout_marginTop="28dp"
@@ -80,10 +80,10 @@
         android:text="@string/password"
         android:textColor="@color/white"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/editText_Email"
+        app:layout_constraintEnd_toEndOf="@+id/adminLog1"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_Email"
+        app:layout_constraintTop_toBottomOf="@+id/adminLog1"
         tools:ignore="MissingConstraints" />
 
     <Button
@@ -95,10 +95,10 @@
         android:text="@string/login"
         android:textColor="@color/white"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/edit_text_Password"
+        app:layout_constraintEnd_toEndOf="@+id/adminLog2"
         app:layout_constraintHorizontal_bias="0.507"
-        app:layout_constraintStart_toStartOf="@+id/edit_text_Password"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_Password" />
+        app:layout_constraintStart_toStartOf="@+id/adminLog2"
+        app:layout_constraintTop_toBottomOf="@+id/adminLog2" />
         app:layout_constraintTop_toBottomOf="@+id/edit_text_Password" />
         app:layout_constraintTop_toBottomOf="@+id/edit_text_Password" />
 

@@ -7,55 +7,68 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Admin_LogInActivity2 extends AppCompatActivity {
 
     private EditText editTextEmail, editTextPassword;
     private Button buttonLogin;
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_admin_log_in2);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
         // Initialize views
-        editTextEmail = findViewById(R.id.editText_Email);
-        editTextPassword = findViewById(R.id.edit_text_Password);
+        editTextEmail = findViewById(R.id.adminLog1);
+        editTextPassword = findViewById(R.id.adminLog1);
         buttonLogin = findViewById(R.id.button_login);
 
-        // Set default values
-        editTextEmail.setText("test");
-        editTextPassword.setText("test");
+        // Firebase reference
+        databaseReference = FirebaseDatabase.getInstance("https://mindease-e0e70-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                .getReference("users/admin");
 
         // Login button click event
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = editTextEmail.getText().toString().trim();
-                String password = editTextPassword.getText().toString().trim();
+        buttonLogin.setOnClickListener(v -> {
+            String emailInput = editTextEmail.getText().toString().trim();
+            String passwordInput = editTextPassword.getText().toString().trim();
 
-                if (email.equals("test") && password.equals("test")) {
-                    // Open Dashboard_AdminActivity
-                    Intent intent = new Intent(Admin_LogInActivity2.this, Dashboard_AdminActivity.class);
-                    startActivity(intent);
-                    finish(); // Close login activity
-                } else {
-                    // Show incorrect credentials message
-                    Toast.makeText(Admin_LogInActivity2.this, "Email or password is incorrect", Toast.LENGTH_SHORT).show();
-                }
+            if (emailInput.isEmpty() || passwordInput.isEmpty()) {
+                Toast.makeText(Admin_LogInActivity2.this, "Please enter email and password", Toast.LENGTH_SHORT).show();
+            } else {
+                checkCredentials(emailInput, passwordInput);
             }
         });
+    }
+
+    private void checkCredentials(String email, String password) {
+        databaseReference.get().addOnSuccessListener(snapshot -> {
+            boolean isMatch = false;
+
+            for (DataSnapshot data : snapshot.getChildren()) {
+                String storedEmail = data.child("email").getValue(String.class);
+                String storedPassword = data.child("password").getValue(String.class);
+
+                if (storedEmail != null && storedPassword != null && storedEmail.equals(email) && storedPassword.equals(password)) {
+                    isMatch = true;
+                    break;
+                }
+            }
+
+            if (isMatch) {
+                Toast.makeText(Admin_LogInActivity2.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Admin_LogInActivity2.this, Dashboard_AdminActivity.class));
+                finish();
+            } else {
+                Toast.makeText(Admin_LogInActivity2.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(e ->
+                Toast.makeText(Admin_LogInActivity2.this, "Database Error: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+        );
     }
 }

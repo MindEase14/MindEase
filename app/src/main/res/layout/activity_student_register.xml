@@ -57,7 +57,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
             <EditText
-                android:id="@+id/edit_text_id"
+                android:id="@+id/studentID"
                 android:layout_width="345dp"
                 android:layout_height="42dp"
                 android:layout_marginTop="32dp"
@@ -73,7 +73,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
             <EditText
-                android:id="@+id/edit_text_Name"
+                android:id="@+id/stuNameRes"
                 android:layout_width="345dp"
                 android:layout_height="42dp"
                 android:layout_marginTop="28dp"
@@ -87,10 +87,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.454"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_id" />
+                app:layout_constraintTop_toBottomOf="@+id/studentID" />
 
             <EditText
-                android:id="@+id/edit_text_Age"
+                android:id="@+id/stuAgeRes"
                 android:layout_width="345dp"
                 android:layout_height="42dp"
                 android:layout_marginTop="28dp"
@@ -104,10 +104,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.454"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_Name" />
+                app:layout_constraintTop_toBottomOf="@+id/stuNameRes" />
 
             <EditText
-                android:id="@+id/edit_text_Gender"
+                android:id="@+id/stuGenderRes"
                 android:layout_width="345dp"
                 android:layout_height="42dp"
                 android:layout_marginTop="28dp"
@@ -120,10 +120,10 @@
                 android:textColorHint="#808080"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_Age" />
+                app:layout_constraintTop_toBottomOf="@+id/stuAgeRes" />
 
             <EditText
-                android:id="@+id/edit_text_Email"
+                android:id="@+id/stuEmailRes"
                 android:layout_width="345dp"
                 android:layout_height="42dp"
                 android:layout_marginTop="28dp"
@@ -137,10 +137,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.454"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_Gender" />
+                app:layout_constraintTop_toBottomOf="@+id/stuGenderRes" />
 
             <EditText
-                android:id="@+id/edit_text_Username"
+                android:id="@+id/stuUnameRes"
                 android:layout_width="345dp"
                 android:layout_height="42dp"
                 android:layout_marginTop="28dp"
@@ -153,10 +153,10 @@
                 android:textColorHint="#808080"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_Email" />
+                app:layout_constraintTop_toBottomOf="@+id/stuEmailRes" />
 
             <EditText
-                android:id="@+id/edit_text_Password"
+                android:id="@+id/stuPassRes"
                 android:layout_width="345dp"
                 android:layout_height="42dp"
                 android:layout_marginTop="28dp"
@@ -169,10 +169,10 @@
                 android:textColorHint="#808080"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_Username" />
+                app:layout_constraintTop_toBottomOf="@+id/stuUnameRes" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/studentButt"
                 android:layout_width="144dp"
                 android:layout_height="35dp"
                 android:layout_marginTop="40dp"
@@ -183,7 +183,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_Password" />
+                app:layout_constraintTop_toBottomOf="@+id/stuPassRes" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
