@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -18,6 +19,7 @@ import java.util.Objects;
 
 public class Student_Test3Activity extends AppCompatActivity {
     ArrayList<String> textInputs = new ArrayList<>();
+    private EditText editTextText1, editTextText2, editTextText3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +27,10 @@ public class Student_Test3Activity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_student_test3); // Set the layout
 
-        // Initialize the ArrayList after setContentView()
+        // Initialize EditText fields after setContentView()
+        editTextText1 = findViewById(R.id.editTextText1);
+        editTextText2 = findViewById(R.id.editTextText2);
+        editTextText3 = findViewById(R.id.editTextText3);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -61,7 +66,21 @@ public class Student_Test3Activity extends AppCompatActivity {
                 Intent intent = new Intent(Student_Test3Activity.this, Student_test4Activity.class);
                 intent.putStringArrayListExtra("inputs", textInputs); // Pass the ArrayList to the next activity
                 startActivity(intent);
+
+                // Append second set inputs and start the next activity
+                ArrayList<String> inputs2= appendInputs();
+                Intent intent2 = new Intent(Student_Test3Activity.this, Student_test4Activity.class);
+                intent.putExtra("inputs2", inputs2); // Pass the array to the next activity
+                startActivity(intent2);
             }
         });
+    }
+
+    private ArrayList<String> appendInputs() {
+        ArrayList<String> inputs = new ArrayList<>(); // Create a new array to store the inputs
+        inputs.add(editTextText1.getText().toString());
+        inputs.add(editTextText2.getText().toString());
+        inputs.add(editTextText3.getText().toString());
+        return inputs;
     }
 }
