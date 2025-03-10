@@ -20,6 +20,7 @@ import java.util.Objects;
 public class Student_Test2Activity extends AppCompatActivity {
     ArrayList<String> inputs = new ArrayList<>();
     private EditText editTextText5, editTextText6, editTextText7;
+    String email = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,23 @@ public class Student_Test2Activity extends AppCompatActivity {
             Toast.makeText(this, "No data received!", Toast.LENGTH_SHORT).show();
         }
 
+        // Retrieve the data passed from the previous activity
+        Intent intent2 = getIntent();
+        if (intent2 != null && intent2.hasExtra("email")) {
+            email = intent2.getStringExtra("email");
+
+            // Check if textInputs is null before using it
+            if (email != null) {
+                // Log the email
+                Log.d("User", "Email: " + email);
+            } else {
+                Toast.makeText(this, "User email not found!", Toast.LENGTH_SHORT).show();
+            }
+        } else{
+            // Handle the case where no data is passed
+            Toast.makeText(this, "No data received!", Toast.LENGTH_SHORT).show();
+        }
+
         Button button5 = findViewById(R.id.button5); // Find button by its ID
 
         button5.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +88,7 @@ public class Student_Test2Activity extends AppCompatActivity {
                 ArrayList<String> inputs = appendInputs();
                 Intent intent = new Intent(Student_Test2Activity.this, Student_Test3Activity.class);
                 intent.putStringArrayListExtra("inputs", inputs); // Pass the ArrayList to the next activity
+                intent.putExtra("email", email); // Pass the email to the next activity
                 startActivity(intent);
             }
         });

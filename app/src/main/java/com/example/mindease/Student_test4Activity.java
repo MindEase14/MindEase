@@ -20,6 +20,7 @@ public class Student_test4Activity extends AppCompatActivity {
     ArrayList<String> textInputs = new ArrayList<>();
     ArrayList<String> textInputs2ndSetQuestion = new ArrayList<>();
     private EditText editTextText8, editTextText9, editTextText10;
+    String email = "";
 
 
     @Override
@@ -76,30 +77,45 @@ public class Student_test4Activity extends AppCompatActivity {
             Toast.makeText(this, "No data received from second set question!", Toast.LENGTH_SHORT).show();
         }
 
+        // Retrieve the data passed from the previous activity
+        Intent intent3 = getIntent();
+        if (intent3 != null && intent2.hasExtra("email")) {
+            email = intent3.getStringExtra("email");
+
+            // Check if textInputs is null before using it
+            if (email != null) {
+                // Log the email
+                Log.d("User", "Email: " + email);
+            } else {
+                Toast.makeText(this, "User email not found!", Toast.LENGTH_SHORT).show();
+            }
+        } else{
+            // Handle the case where no data is passed
+            Toast.makeText(this, "No data received!", Toast.LENGTH_SHORT).show();
+        }
+
         Button button7 = findViewById(R.id.button7); // Find button by its ID
 
         button7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Append inputs and start the next activity
-                Intent intent = new Intent(Student_test4Activity.this, Student_Test5Activity.class);
-                intent.putStringArrayListExtra("inputs", textInputs); // Pass the ArrayList to the next activity
-                startActivity(intent);
+                // Get the new inputs
+                ArrayList<String> inputs2 = appendInputs();
 
-                // Append second set inputs and start the next activity
-                ArrayList<String> inputs2= appendInputs();
-                Intent intent2 = new Intent(Student_test4Activity.this, Student_Test5Activity.class);
-                intent.putExtra("inputs2", inputs2); // Pass the array to the next activity
-                startActivity(intent2);
+                // Create an Intent to start the next activity
+                Intent intent = new Intent(Student_test4Activity.this, Student_Test5Activity.class);
+                intent.putStringArrayListExtra("inputs", textInputs);  // Pass the original inputs
+                intent.putStringArrayListExtra("inputs2", inputs2);   // Pass the new inputs
+                intent.putExtra("email", email); // Pass the email to the next activity
+                startActivity(intent);
             }
         });
     }
 
     private ArrayList<String> appendInputs() {
-        ArrayList<String> inputs = new ArrayList<>(); // Create a new array to store the inputs
-        inputs.add(editTextText8.getText().toString());
-        inputs.add(editTextText9.getText().toString());
-        inputs.add(editTextText10.getText().toString());
-        return inputs;
+        textInputs2ndSetQuestion.add(editTextText8.getText().toString());
+        textInputs2ndSetQuestion.add(editTextText9.getText().toString());
+        textInputs2ndSetQuestion.add(editTextText10.getText().toString());
+        return textInputs2ndSetQuestion;
     }
 }

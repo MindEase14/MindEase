@@ -1,5 +1,6 @@
 package com.example.mindease;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -19,16 +21,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class Student_Test5Activity extends AppCompatActivity {
     ArrayList<String> textInputs = new ArrayList<>();
     ArrayList<String> textInputs2ndSetQuestion = new ArrayList<>();
     private EditText editTextText11, editTextText12, editTextText13;
-
+    String email = "";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseApp.initializeApp(this);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_student_test5); // Set the layout first
 
@@ -81,6 +88,23 @@ public class Student_Test5Activity extends AppCompatActivity {
             Toast.makeText(this, "No data received from second set question!", Toast.LENGTH_SHORT).show();
         }
 
+        // Retrieve the data passed from the previous activity
+        Intent intent3 = getIntent();
+        if (intent3 != null && intent2.hasExtra("email")) {
+            email = intent3.getStringExtra("email");
+
+            // Check if textInputs is null before using it
+            if (email != null) {
+                // Log the email
+                Log.d("User", "Email: " + email);
+            } else {
+                Toast.makeText(this, "User email not found!", Toast.LENGTH_SHORT).show();
+            }
+        } else{
+            // Handle the case where no data is passed
+            Toast.makeText(this, "No data received!", Toast.LENGTH_SHORT).show();
+        }
+
         // Initialize the Button after setContentView()
         Button submit = findViewById(R.id.button9);
 
@@ -94,24 +118,74 @@ public class Student_Test5Activity extends AppCompatActivity {
                     return;
                 }
 
+                appendInputs();
                 // Convert ArrayList<String> to String[]
                 String[] textBoxes = textInputs.toArray(new String[0]);
                 String[] textBoxes2 = textInputs2ndSetQuestion.toArray(new String[0]);
 
-                // Perform fuzzy clustering for both sets of questions
-                String result = performFuzzyClustering(textBoxes);
-                String result2 = performFuzzyClustering(textBoxes2);
+                // Perform fuzzy clustering for both sets of questions and get the final evaluation
+                String finalEvaluation1 = getFinalEvaluation(textBoxes);
+                String finalEvaluation2 = getFinalEvaluation(textBoxes2);
 
-                // Display the result
-                Toast.makeText(Student_Test5Activity.this, result, Toast.LENGTH_LONG).show();
-                Log.d("FuzzyClusteringResult for 1st set:", result);
+                // Combine the final evaluations
+                String combinedResult = "Final Evaluation for 1st set:\n" + finalEvaluation1 + "\n\n" +
+                        "Final Evaluation for 2nd set:\n" + finalEvaluation2;
 
-                // Display the result
-                Toast.makeText(Student_Test5Activity.this, result, Toast.LENGTH_LONG).show();
-                Log.d("FuzzyClusteringResult for 2nd set:", result2);
+                // Display the final evaluation in a popup dialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(Student_Test5Activity.this);
+                builder.setTitle("Final Evaluation");
+                builder.setMessage(combinedResult);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK button
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                // Log the final evaluations
+                Log.d("FinalEvaluation for 1st set:", finalEvaluation1);
+                Log.d("FinalEvaluation for 2nd set:", finalEvaluation2);
+
+                // Store the results in Firebase Realtime Database
+                storeResultsInFirebase(finalEvaluation1, finalEvaluation2);
             }
         });
     }
+
+    private String getFinalEvaluation(String[] textBoxes) {
+        try {
+            double[] responses = new double[textBoxes.length];
+            for (int i = 0; i < textBoxes.length; i++) {
+                responses[i] = parseResponse(textBoxes[i]);
+            }
+
+            int numClusters = 4; // Minimal, Mild, Moderate, Severe
+            double[][] memberships = initializeMembershipMatrix(responses.length, numClusters);
+            double[] centroids = {0.5, 1.5, 2.5, 3.0};
+
+            performFCM(responses, centroids, memberships, numClusters);
+
+            int[] clusters = new int[responses.length];
+            for (int i = 0; i < responses.length; i++) {
+                clusters[i] = getCluster(memberships[i]);
+            }
+
+            // Get the overall conclusion
+            return getOverallClusterConclusion(clusters);
+        } catch (Exception ex) {
+            return "An error occurred in getFinalEvaluation(): " + ex.getMessage();
+        }
+    }
+
+    private void appendInputs() {
+        textInputs2ndSetQuestion.add(editTextText11.getText().toString());
+        textInputs2ndSetQuestion.add(editTextText12.getText().toString());
+        textInputs2ndSetQuestion.add(editTextText13.getText().toString());
+    }
+
+
 
     private String performFuzzyClustering(String[] textBoxes) {
         try {
@@ -297,4 +371,49 @@ public class Student_Test5Activity extends AppCompatActivity {
         }
         return maxDiff;
     }
+
+    // Function to store results in Firebase Realtime Database
+    private void storeResultsInFirebase(String finalEvaluation1, String finalEvaluation2) {
+        // Get a reference to the Firebase Realtime Database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference recordsRef = database.getReference("records");
+
+        // Create a unique key for the record
+        String recordId = recordsRef.push().getKey();
+
+        // Create a map to store the results
+        Map<String, Object> recordMap = new HashMap<>();
+
+        // Store the first set of inputs
+        for (int i = 0; i < textInputs.size(); i++) {
+            recordMap.put("set1_question" + (i + 1), textInputs.get(i)); // Use get(i) instead of indexOf(i)
+        }
+
+        // Store the second set of inputs
+        for (int i = 0; i < textInputs2ndSetQuestion.size(); i++) {
+            recordMap.put("set2_question" + (i + 1), textInputs2ndSetQuestion.get(i)); // Use get(i) instead of indexOf(i)
+        }
+
+        // Store the final evaluations and timestamp
+        recordMap.put("finalEvaluation1", finalEvaluation1);
+        recordMap.put("finalEvaluation2", finalEvaluation2);
+        recordMap.put("timestamp", System.currentTimeMillis()); // Add a timestamp
+        recordMap.put("email", email); // user email
+
+        // Store the results in the database
+        if (recordId != null) {
+            recordsRef.child(recordId).setValue(recordMap)
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("Firebase", "Results stored successfully!");
+                        Toast.makeText(Student_Test5Activity.this, "Results saved to database!", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("Firebase", "Failed to store results: " + e.getMessage());
+                        Toast.makeText(Student_Test5Activity.this, "Failed to save results!", Toast.LENGTH_SHORT).show();
+                    });
+        }
+    }
+
+
+
 }

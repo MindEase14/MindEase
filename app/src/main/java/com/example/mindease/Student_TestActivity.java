@@ -2,6 +2,7 @@ package com.example.mindease;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 
 public class Student_TestActivity extends AppCompatActivity {
     private EditText editText1, editText2, editText3, editText4;
+    String email = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +32,29 @@ public class Student_TestActivity extends AppCompatActivity {
         editText3 = findViewById(R.id.editTextText3);
         editText4 = findViewById(R.id.editTextText4);
 
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Retrieve the data passed from the previous activity
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("email")) {
+            email = intent.getStringExtra("email");
+
+            // Check if textInputs is null before using it
+            if (email != null) {
+                // Log the email
+                Log.d("User", "Email: " + email);
+            } else {
+                Toast.makeText(this, "User email not found!", Toast.LENGTH_SHORT).show();
+            }
+        } else{
+            // Handle the case where no data is passed
+            Toast.makeText(this, "No data received!", Toast.LENGTH_SHORT).show();
+        }
 
         Button button4 = findViewById(R.id.button4); // Find button by its ID
 
@@ -60,6 +80,7 @@ public class Student_TestActivity extends AppCompatActivity {
                 ArrayList<String> inputs = appendInputs();
                 Intent intent = new Intent(Student_TestActivity.this, Student_Test2Activity.class);
                 intent.putExtra("inputs", inputs); // Pass the array to the next activity
+                intent.putExtra("email", email); // Pass the email to the next activity
                 startActivity(intent);
             }
         });
