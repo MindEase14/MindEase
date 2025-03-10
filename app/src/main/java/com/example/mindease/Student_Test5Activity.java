@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -20,6 +21,10 @@ import java.util.Random;
 
 public class Student_Test5Activity extends AppCompatActivity {
     ArrayList<String> textInputs = new ArrayList<>();
+    ArrayList<String> textInputs2ndSetQuestion = new ArrayList<>();
+    private EditText editTextText11, editTextText12, editTextText13;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +37,11 @@ public class Student_Test5Activity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Initialize EditText fields after setContentView()
+        editTextText11 = findViewById(R.id.editTextText11);
+        editTextText12 = findViewById(R.id.editTextText12);
+        editTextText13 = findViewById(R.id.editTextText13);
 
         // Retrieve the data passed from the previous activity
         Intent intent = getIntent();
@@ -52,6 +62,25 @@ public class Student_Test5Activity extends AppCompatActivity {
             Toast.makeText(this, "No data received!", Toast.LENGTH_SHORT).show();
         }
 
+        // Retrieve the second set of questions data passed from the previous activity
+        Intent intent2 = getIntent();
+        if (intent2 != null && intent2.hasExtra("inputs2")) {
+            textInputs2ndSetQuestion = intent2.getStringArrayListExtra("inputs2");
+
+            // Check if textInputs is null before using it
+            if (textInputs2ndSetQuestion != null) {
+                // Log the inputs
+                for (int i = 0; i < textInputs2ndSetQuestion.size(); i++) {
+                    Log.d("TextInput2", "Input " + i + ": " + textInputs2ndSetQuestion.get(i));
+                }
+            } else {
+                Toast.makeText(this, "No data received for second set questions!", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            // Handle the case where no data is passed
+            Toast.makeText(this, "No data received from second set question!", Toast.LENGTH_SHORT).show();
+        }
+
         // Initialize the Button after setContentView()
         Button submit = findViewById(R.id.button9);
 
@@ -67,13 +96,19 @@ public class Student_Test5Activity extends AppCompatActivity {
 
                 // Convert ArrayList<String> to String[]
                 String[] textBoxes = textInputs.toArray(new String[0]);
+                String[] textBoxes2 = textInputs2ndSetQuestion.toArray(new String[0]);
 
-                // Perform fuzzy clustering
+                // Perform fuzzy clustering for both sets of questions
                 String result = performFuzzyClustering(textBoxes);
+                String result2 = performFuzzyClustering(textBoxes2);
 
                 // Display the result
                 Toast.makeText(Student_Test5Activity.this, result, Toast.LENGTH_LONG).show();
-                Log.d("FuzzyClusteringResult", result);
+                Log.d("FuzzyClusteringResult for 1st set:", result);
+
+                // Display the result
+                Toast.makeText(Student_Test5Activity.this, result, Toast.LENGTH_LONG).show();
+                Log.d("FuzzyClusteringResult for 2nd set:", result2);
             }
         });
     }
