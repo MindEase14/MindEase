@@ -1,74 +1,136 @@
 package com.example.mindease;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class Admin_LogInActivity2 extends AppCompatActivity {
 
     private EditText editTextEmail, editTextPassword;
     private Button buttonLogin;
-    private DatabaseReference databaseReference;
+    private FirebaseAuth mAuth;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_log_in2);
 
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+
         // Initialize views
         editTextEmail = findViewById(R.id.adminLog1);
-        editTextPassword = findViewById(R.id.adminLog1);
+        editTextPassword = findViewById(R.id.adminLog2);
         buttonLogin = findViewById(R.id.button_login);
 
-        // Firebase reference
-        databaseReference = FirebaseDatabase.getInstance("https://mindease-e0e70-default-rtdb.asia-southeast1.firebasedatabase.app/")
-                .getReference("users/admin");
+        // Setup progress dialog
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Authenticating");
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
 
-        // Login button click event
         buttonLogin.setOnClickListener(v -> {
             String emailInput = editTextEmail.getText().toString().trim();
             String passwordInput = editTextPassword.getText().toString().trim();
 
-            if (emailInput.isEmpty() || passwordInput.isEmpty()) {
-                Toast.makeText(Admin_LogInActivity2.this, "Please enter email and password", Toast.LENGTH_SHORT).show();
-            } else {
-                checkCredentials(emailInput, passwordInput);
+            if (validateInputs(emailInput, passwordInput)) {
+                performLogin(emailInput, passwordInput);
             }
         });
     }
 
-    private void checkCredentials(String email, String password) {
-        databaseReference.get().addOnSuccessListener(snapshot -> {
-            boolean isMatch = false;
+    private boolean validateInputs(String email, String password) {
+        boolean valid = true;
 
-            for (DataSnapshot data : snapshot.getChildren()) {
-                String storedEmail = data.child("email").getValue(String.class);
-                String storedPassword = data.child("password").getValue(String.class);
+        if (email.isEmpty()) {
+            editTextEmail.setError("Email is required");
+            editTextEmail.requestFocus();
+            valid = false;
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            editTextEmail.setError("Valid email required");
+            editTextEmail.requestFocus();
+            valid = false;
+        }
 
-                if (storedEmail != null && storedPassword != null && storedEmail.equals(email) && storedPassword.equals(password)) {
-                    isMatch = true;
-                    break;
-                }
+        if (password.isEmpty()) {
+            editTextPassword.setError("Password is required");
+            editTextPassword.requestFocus();
+            valid = false;
+        }
+
+        return valid;
+    }
+
+    private void performLogin(String email, String password) {
+        progressDialog.show();
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    progressDialog.dismiss();
+
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        handleSuccessfulLogin(user);
+                    } else {
+                        handleLoginError(task.getException());
+                    }
+                });
+    }
+
+    private void handleSuccessfulLogin(FirebaseUser user) {
+        if (user != null) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Login Successful")
+                    .setMessage("Welcome " + user.getEmail())
+                    .setPositiveButton("Continue", (dialog, which) -> {
+                        redirectToDashboard();
+                        finish();
+                    })
+                    .setCancelable(false)
+                    .show();
+        }
+    }
+
+    private void redirectToDashboard() {
+        startActivity(new Intent(this, Dashboard_AdminActivity.class));
+        finish();
+    }
+
+    private void handleLoginError(Exception exception) {
+        String errorMessage = "Authentication failed";
+
+        if (exception != null && exception.getMessage() != null) {
+            String error = exception.getMessage().toLowerCase();
+            if (error.contains("invalid password")) {
+                errorMessage = "Incorrect password";
+            } else if (error.contains("user not found")) {
+                errorMessage = "Account not found";
+            } else if (error.contains("network error")) {
+                errorMessage = "No internet connection";
             }
+        }
 
-            if (isMatch) {
-                Toast.makeText(Admin_LogInActivity2.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(Admin_LogInActivity2.this, Dashboard_AdminActivity.class));
-                finish();
-            } else {
-                Toast.makeText(Admin_LogInActivity2.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(e ->
-                Toast.makeText(Admin_LogInActivity2.this, "Database Error: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-        );
+        new AlertDialog.Builder(this)
+                .setTitle("Login Failed")
+                .setMessage(errorMessage)
+                .setPositiveButton("OK", null)
+                .show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }

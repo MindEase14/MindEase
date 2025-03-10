@@ -1,26 +1,28 @@
 package com.example.mindease;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 
 public class Student_RegisterActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
     private EditText studentID, stuNameRes, stuAgeRes, stuGenderRes, stuEmailRes, stuUnameRes, stuPassRes;
     private Button studentButt;
 
@@ -30,8 +32,9 @@ public class Student_RegisterActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_student_register);
 
+        mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance("https://mindease-e0e70-default-rtdb.asia-southeast1.firebasedatabase.app/")
-                .getReference("users");
+                .getReference();
 
         // Initialize UI elements
         studentID = findViewById(R.id.studentID);
@@ -43,40 +46,34 @@ public class Student_RegisterActivity extends AppCompatActivity {
         stuPassRes = findViewById(R.id.stuPassRes);
         studentButt = findViewById(R.id.studentButt);
 
-        // Make studentID read-only
-        studentID.setEnabled(false);
-
-        // Fetch and update the student ID properly
-        fetchAndIncrementStudentId();
+        studentID.setEnabled(false); // Make student ID read-only
+        fetchStudentId(); // Fetch ID when activity starts
 
         studentButt.setOnClickListener(v -> registerStudent());
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
     }
 
-    private void fetchAndIncrementStudentId() {
-        mDatabase.child("studentIdCount").runTransaction(new com.google.firebase.database.Transaction.Handler() {
+    private void fetchStudentId() {
+        mDatabase.child("studentIdCount").runTransaction(new Transaction.Handler() {
             @Override
-            public com.google.firebase.database.Transaction.Result doTransaction(com.google.firebase.database.MutableData mutableData) {
+            public Transaction.Result doTransaction(MutableData mutableData) {
                 Integer currentId = mutableData.getValue(Integer.class);
                 if (currentId == null) {
-                    return com.google.firebase.database.Transaction.success(mutableData);
+                    mutableData.setValue(1);
+                } else {
+                    mutableData.setValue(currentId + 1);
                 }
-                mutableData.setValue(currentId + 1); // Increment ID in Firebase
-                return com.google.firebase.database.Transaction.success(mutableData);
+                return Transaction.success(mutableData);
             }
 
             @Override
             public void onComplete(DatabaseError error, boolean committed, DataSnapshot snapshot) {
                 if (committed && snapshot.exists()) {
-                    int newStudentId = snapshot.getValue(Integer.class);
-                    studentID.setText(String.valueOf(newStudentId)); // Set the new ID to text field
+                    int newId = snapshot.getValue(Integer.class);
+                    runOnUiThread(() -> studentID.setText(String.valueOf(newId)));
                 } else {
-                    Toast.makeText(Student_RegisterActivity.this, "Failed to get student ID!", Toast.LENGTH_SHORT).show();
+                    Log.e("Firebase", "ID fetch failed: " + error);
+                    runOnUiThread(() -> Toast.makeText(Student_RegisterActivity.this,
+                            "Failed to get student ID!", Toast.LENGTH_SHORT).show());
                 }
             }
         });
@@ -91,38 +88,61 @@ public class Student_RegisterActivity extends AppCompatActivity {
         String username = stuUnameRes.getText().toString().trim();
         String password = stuPassRes.getText().toString().trim();
 
-        if (name.isEmpty() || age.isEmpty() || gender.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty()) {
+        if (id.isEmpty() || name.isEmpty() || age.isEmpty() || gender.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Student student = new Student(id, name, age, gender, email, username, password);
-
-        mDatabase.child("students").child(id).setValue(student)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(Student_RegisterActivity.this, "Student registered successfully!", Toast.LENGTH_SHORT).show();
-                    clearFields();
-                    fetchAndIncrementStudentId(); // Get next available student ID after success
-                })
-                .addOnFailureListener(e -> Toast.makeText(Student_RegisterActivity.this, "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            saveUserData(user.getUid(), id, name, age, gender, email, username, password);
+                        }
+                    } else {
+                        Toast.makeText(Student_RegisterActivity.this,
+                                "Registration Failed: " + task.getException().getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
-    private void clearFields() {
-        stuNameRes.setText("");
-        stuAgeRes.setText("");
-        stuGenderRes.setText("");
-        stuEmailRes.setText("");
-        stuUnameRes.setText("");
-        stuPassRes.setText("");
+    private void saveUserData(String uid, String studentId, String name, String age,
+                              String gender, String email, String username, String password) {
+        Student student = new Student(studentId, name, age, gender, email, username, password);
+
+        mDatabase.child("users/students").child(uid).setValue(student)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(Student_RegisterActivity.this,
+                            "Registration successful!", Toast.LENGTH_SHORT).show();
+                    loginUser(email, password);
+                })
+                .addOnFailureListener(e -> Toast.makeText(Student_RegisterActivity.this,
+                        "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    private void loginUser(String email, String password) {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        startActivity(new Intent(this, Student_LogInActivity.class));
+                        finish();
+                    } else {
+                        Toast.makeText(Student_RegisterActivity.this,
+                                "Auto-login failed: " + task.getException().getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private static class Student {
         public String id, name, age, gender, email, username, password;
 
-        public Student() {
-        }
+        public Student() {}
 
-        public Student(String id, String name, String age, String gender, String email, String username, String password) {
+        public Student(String id, String name, String age, String gender,
+                       String email, String username, String password) {
             this.id = id;
             this.name = name;
             this.age = age;

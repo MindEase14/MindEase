@@ -34,7 +34,7 @@
         tools:ignore="MissingConstraints" />
 
     <EditText
-        android:id="@+id/editText_Email"
+        android:id="@+id/studentEmail"
         android:layout_width="299dp"
         android:layout_height="46dp"
         android:layout_marginTop="20dp"
@@ -52,7 +52,7 @@
         tools:ignore="LabelFor,RtlSymmetry" />
 
     <EditText
-        android:id="@+id/edit_text_Password"
+        android:id="@+id/studentPass"
         android:layout_width="299dp"
         android:layout_height="46dp"
         android:layout_marginTop="28dp"
@@ -78,14 +78,14 @@
         android:text="@string/password"
         android:textColor="@color/white"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/editText_Email"
+        app:layout_constraintEnd_toEndOf="@+id/studentEmail"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_Email"
+        app:layout_constraintTop_toBottomOf="@+id/studentEmail"
         tools:ignore="MissingConstraints" />
 
     <Button
-        android:id="@+id/button_login"
+        android:id="@+id/studentButt"
         android:layout_width="142dp"
         android:layout_height="57dp"
         android:layout_marginTop="92dp"
@@ -93,9 +93,9 @@
         android:text="@string/login"
         android:textColor="@color/white"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/edit_text_Password"
+        app:layout_constraintEnd_toEndOf="@+id/studentPass"
         app:layout_constraintHorizontal_bias="0.507"
-        app:layout_constraintStart_toStartOf="@+id/edit_text_Password"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_Password" />
+        app:layout_constraintStart_toStartOf="@+id/studentPass"
+        app:layout_constraintTop_toBottomOf="@+id/studentPass" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

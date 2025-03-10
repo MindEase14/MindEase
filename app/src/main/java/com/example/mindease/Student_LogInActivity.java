@@ -1,51 +1,136 @@
 package com.example.mindease;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class Student_LogInActivity extends AppCompatActivity {
-    private EditText editTextEmail, editTextPassword;
-    private final String STATIC_EMAIL = "test";
-    private final String STATIC_PASSWORD = "test";
+
+    private EditText studentEmail, studentPass;
+    private Button studentButt;
+    private FirebaseAuth mAuth;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_log_in);
 
-        editTextEmail = findViewById(R.id.editText_Email);
-        editTextPassword = findViewById(R.id.edit_text_Password);
-        Button buttonLogin = findViewById(R.id.button_login);
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
 
-        // Set static default values
-        editTextEmail.setText(STATIC_EMAIL);
-        editTextPassword.setText(STATIC_PASSWORD);
+        // Initialize views
+        studentEmail = findViewById(R.id.studentEmail);
+        studentPass = findViewById(R.id.studentPass);
+        studentButt = findViewById(R.id.studentButt);
 
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                validateLogin();
+        // Setup progress dialog
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Authenticating");
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
+
+        studentButt.setOnClickListener(v -> {
+            String emailInput = studentEmail.getText().toString().trim();
+            String passwordInput = studentPass.getText().toString().trim();
+
+            if (validateInputs(emailInput, passwordInput)) {
+                performLogin(emailInput, passwordInput);
             }
         });
     }
 
-    private void validateLogin() {
-        String inputEmail = editTextEmail.getText().toString();
-        String inputPassword = editTextPassword.getText().toString();
+    private boolean validateInputs(String email, String password) {
+        boolean valid = true;
 
-        if (inputEmail.equals(STATIC_EMAIL) && inputPassword.equals(STATIC_PASSWORD)) {
-            // Correct login, navigate to DashboardActivity
-            Intent intent = new Intent(Student_LogInActivity.this, Dashboard_StudentActivity.class);
-            startActivity(intent);
-            finish();
-        } else {
-            // Incorrect login, show pop-up message
-            Toast.makeText(this, "Incorrect email or password", Toast.LENGTH_SHORT).show();
+        if (email.isEmpty()) {
+            studentEmail.setError("Email is required");
+            studentEmail.requestFocus();
+            valid = false;
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            studentEmail.setError("Valid email required");
+            studentEmail.requestFocus();
+            valid = false;
         }
+
+        if (password.isEmpty()) {
+            studentPass.setError("Password is required");
+            studentPass.requestFocus();
+            valid = false;
+        }
+
+        return valid;
+    }
+
+    private void performLogin(String email, String password) {
+        progressDialog.show();
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    progressDialog.dismiss();
+
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        handleSuccessfulLogin(user);
+                    } else {
+                        handleLoginError(task.getException());
+                    }
+                });
+    }
+
+    private void handleSuccessfulLogin(FirebaseUser user) {
+        if (user != null) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Login Successful")
+                    .setMessage("Welcome " + user.getEmail())
+                    .setPositiveButton("Continue", (dialog, which) -> {
+                        redirectToDashboard();
+                        finish();
+                    })
+                    .setCancelable(false)
+                    .show();
+        }
+    }
+
+    private void redirectToDashboard() {
+        startActivity(new Intent(this, Dashboard_StudentActivity.class));
+        finish();
+    }
+
+    private void handleLoginError(Exception exception) {
+        String errorMessage = "Authentication failed";
+
+        if (exception != null && exception.getMessage() != null) {
+            String error = exception.getMessage().toLowerCase();
+            if (error.contains("invalid password")) {
+                errorMessage = "Incorrect password";
+            } else if (error.contains("user not found")) {
+                errorMessage = "Account not found";
+            } else if (error.contains("network error")) {
+                errorMessage = "No internet connection";
+            }
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("Login Failed")
+                .setMessage(errorMessage)
+                .setPositiveButton("OK", null)
+                .show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }
