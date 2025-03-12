@@ -14,7 +14,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class Dashboard_StudentActivity extends AppCompatActivity {
-    String email = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,33 +26,22 @@ public class Dashboard_StudentActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Retrieve the data passed from the previous activity
-        Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("email")) {
-            email = intent.getStringExtra("email");
-
-            // Check if textInputs is null before using it
-            if (email != null) {
-                // Log the email
-                Log.d("User", "Email: " + email);
-            } else {
-                Toast.makeText(this, "User email not found!", Toast.LENGTH_SHORT).show();
-            }
-        } else{
-            // Handle the case where no data is passed
-            Toast.makeText(this, "No data received!", Toast.LENGTH_SHORT).show();
-        }
-
-
-        Button button1 = findViewById(R.id.button1); // Find button by its ID
+        Button button1 = findViewById(R.id.button1);
+        Button button2 = findViewById(R.id.button2);
 
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // store email and start the next activity
                 Intent intent = new Intent(Dashboard_StudentActivity.this, Student_TestActivity.class);
-                intent.putExtra("email", email); // Pass the email to the next activity
                 startActivity(intent);
+            }
+        });
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
     }

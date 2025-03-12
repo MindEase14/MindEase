@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class Student_TestActivity extends AppCompatActivity {
     private EditText editText1, editText2, editText3, editText4;
-    String email = "";
+    String uid = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +41,15 @@ public class Student_TestActivity extends AppCompatActivity {
 
         // Retrieve the data passed from the previous activity
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("email")) {
-            email = intent.getStringExtra("email");
+        if (intent != null && intent.hasExtra("uid")) {
+            uid = intent.getStringExtra("uid");
 
             // Check if textInputs is null before using it
-            if (email != null) {
+            if (uid != null) {
                 // Log the email
-                Log.d("User", "Email: " + email);
+                Log.d("User", "uid: " + uid);
             } else {
-                Toast.makeText(this, "User email not found!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "User uid not found!", Toast.LENGTH_SHORT).show();
             }
         } else{
             // Handle the case where no data is passed
@@ -80,7 +80,7 @@ public class Student_TestActivity extends AppCompatActivity {
                 ArrayList<String> inputs = appendInputs();
                 Intent intent = new Intent(Student_TestActivity.this, Student_Test2Activity.class);
                 intent.putExtra("inputs", inputs); // Pass the array to the next activity
-                intent.putExtra("email", email); // Pass the email to the next activity
+                intent.putExtra("uid", uid); // Pass the email to the next activity
                 startActivity(intent);
             }
         });

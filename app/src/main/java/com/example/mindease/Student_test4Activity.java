@@ -20,7 +20,6 @@ public class Student_test4Activity extends AppCompatActivity {
     ArrayList<String> textInputs = new ArrayList<>();
     ArrayList<String> textInputs2ndSetQuestion = new ArrayList<>();
     private EditText editTextText8, editTextText9, editTextText10;
-    String email = "";
 
 
     @Override
@@ -77,23 +76,6 @@ public class Student_test4Activity extends AppCompatActivity {
             Toast.makeText(this, "No data received from second set question!", Toast.LENGTH_SHORT).show();
         }
 
-        // Retrieve the data passed from the previous activity
-        Intent intent3 = getIntent();
-        if (intent3 != null && intent2.hasExtra("email")) {
-            email = intent3.getStringExtra("email");
-
-            // Check if textInputs is null before using it
-            if (email != null) {
-                // Log the email
-                Log.d("User", "Email: " + email);
-            } else {
-                Toast.makeText(this, "User email not found!", Toast.LENGTH_SHORT).show();
-            }
-        } else{
-            // Handle the case where no data is passed
-            Toast.makeText(this, "No data received!", Toast.LENGTH_SHORT).show();
-        }
-
         Button button7 = findViewById(R.id.button7); // Find button by its ID
 
         button7.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +88,6 @@ public class Student_test4Activity extends AppCompatActivity {
                 Intent intent = new Intent(Student_test4Activity.this, Student_Test5Activity.class);
                 intent.putStringArrayListExtra("inputs", textInputs);  // Pass the original inputs
                 intent.putStringArrayListExtra("inputs2", inputs2);   // Pass the new inputs
-                intent.putExtra("email", email); // Pass the email to the next activity
                 startActivity(intent);
             }
         });

@@ -29,7 +29,7 @@ public class Student_Test5Activity extends AppCompatActivity {
     ArrayList<String> textInputs = new ArrayList<>();
     ArrayList<String> textInputs2ndSetQuestion = new ArrayList<>();
     private EditText editTextText11, editTextText12, editTextText13;
-    String email = "";
+    String uid = "";
 
 
     @Override
@@ -88,21 +88,12 @@ public class Student_Test5Activity extends AppCompatActivity {
             Toast.makeText(this, "No data received from second set question!", Toast.LENGTH_SHORT).show();
         }
 
-        // Retrieve the data passed from the previous activity
-        Intent intent3 = getIntent();
-        if (intent3 != null && intent2.hasExtra("email")) {
-            email = intent3.getStringExtra("email");
+        uid = FirebaseUtils.getCurrentUserUID();
+        if (uid != null) {
+            Log.d("User", "Current userID logged in: " + uid);
 
-            // Check if textInputs is null before using it
-            if (email != null) {
-                // Log the email
-                Log.d("User", "Email: " + email);
-            } else {
-                Toast.makeText(this, "User email not found!", Toast.LENGTH_SHORT).show();
-            }
-        } else{
-            // Handle the case where no data is passed
-            Toast.makeText(this, "No data received!", Toast.LENGTH_SHORT).show();
+        } else {
+            Log.d("User", "No user logged in");
         }
 
         // Initialize the Button after setContentView()
@@ -376,7 +367,7 @@ public class Student_Test5Activity extends AppCompatActivity {
     private void storeResultsInFirebase(String finalEvaluation1, String finalEvaluation2) {
         // Get a reference to the Firebase Realtime Database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference recordsRef = database.getReference("records");
+        DatabaseReference recordsRef = database.getReference("records/"+uid+"/");
 
         // Create a unique key for the record
         String recordId = recordsRef.push().getKey();
@@ -398,7 +389,6 @@ public class Student_Test5Activity extends AppCompatActivity {
         recordMap.put("finalEvaluation1", finalEvaluation1);
         recordMap.put("finalEvaluation2", finalEvaluation2);
         recordMap.put("timestamp", System.currentTimeMillis()); // Add a timestamp
-        recordMap.put("email", email); // user email
 
         // Store the results in the database
         if (recordId != null) {
@@ -413,7 +403,5 @@ public class Student_Test5Activity extends AppCompatActivity {
                     });
         }
     }
-
-
 
 }
