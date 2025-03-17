@@ -2,6 +2,8 @@ package com.example.mindease;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +23,6 @@ public class Student_test4Activity extends AppCompatActivity {
     ArrayList<String> textInputs2ndSetQuestion = new ArrayList<>();
     private EditText editTextText8, editTextText9, editTextText10;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +38,11 @@ public class Student_test4Activity extends AppCompatActivity {
         editTextText8 = findViewById(R.id.editTextText8);
         editTextText9 = findViewById(R.id.editTextText9);
         editTextText10 = findViewById(R.id.editTextText10);
+
+        // Add TextWatchers to each EditText
+        addTextWatcher(editTextText8);
+        addTextWatcher(editTextText9);
+        addTextWatcher(editTextText10);
 
         // Retrieve the data passed from the previous activity
         Intent intent = getIntent();
@@ -81,14 +87,19 @@ public class Student_test4Activity extends AppCompatActivity {
         button7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get the new inputs
-                ArrayList<String> inputs2 = appendInputs();
+                // Check if all inputs are valid before proceeding
+                if (validateInput(editTextText8) && validateInput(editTextText9) && validateInput(editTextText10)) {
+                    // Get the new inputs
+                    ArrayList<String> inputs2 = appendInputs();
 
-                // Create an Intent to start the next activity
-                Intent intent = new Intent(Student_test4Activity.this, Student_Test5Activity.class);
-                intent.putStringArrayListExtra("inputs", textInputs);  // Pass the original inputs
-                intent.putStringArrayListExtra("inputs2", inputs2);   // Pass the new inputs
-                startActivity(intent);
+                    // Create an Intent to start the next activity
+                    Intent intent = new Intent(Student_test4Activity.this, Student_Test5Activity.class);
+                    intent.putStringArrayListExtra("inputs", textInputs);  // Pass the original inputs
+                    intent.putStringArrayListExtra("inputs2", inputs2);   // Pass the new inputs
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(Student_test4Activity.this, "Please correct the inputs", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -98,5 +109,54 @@ public class Student_test4Activity extends AppCompatActivity {
         textInputs2ndSetQuestion.add(editTextText9.getText().toString());
         textInputs2ndSetQuestion.add(editTextText10.getText().toString());
         return textInputs2ndSetQuestion;
+    }
+
+    private boolean validateInput(EditText inputBox) {
+        String input = inputBox.getText().toString().trim();
+
+        // Check if the input is empty
+        if (input.isEmpty()) {
+            inputBox.setError("Field cannot be empty");
+            return false;
+        }
+
+        // Check if the input is a number
+        try {
+            int number = Integer.parseInt(input);
+
+            // Check if the number is 1, 2, or 3
+            if (number < 1 || number > 3) {
+                inputBox.setError("Input must be 1, 2, or 3");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            // If the input is not a number, show an error
+            inputBox.setError("Input must be a number");
+            return false;
+        }
+
+        // Clear any previous error
+        inputBox.setError(null);
+        return true; // Input is valid
+    }
+
+    private void addTextWatcher(EditText editText) {
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not needed
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Validate input on every key press
+                validateInput(editText);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Not needed
+            }
+        });
     }
 }

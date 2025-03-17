@@ -3,6 +3,8 @@ package com.example.mindease;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -49,6 +51,11 @@ public class Student_Test5Activity extends AppCompatActivity {
         editTextText11 = findViewById(R.id.editTextText11);
         editTextText12 = findViewById(R.id.editTextText12);
         editTextText13 = findViewById(R.id.editTextText13);
+
+        // Add TextWatchers to each EditText
+        addTextWatcher(editTextText11);
+        addTextWatcher(editTextText12);
+        addTextWatcher(editTextText13);
 
         // Retrieve the data passed from the previous activity
         Intent intent = getIntent();
@@ -103,44 +110,48 @@ public class Student_Test5Activity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Check if textInputs is null or empty
-                if (textInputs == null || textInputs.isEmpty()) {
-                    Toast.makeText(Student_Test5Activity.this, "No data to process!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                appendInputs();
-                // Convert ArrayList<String> to String[]
-                String[] textBoxes = textInputs.toArray(new String[0]);
-                String[] textBoxes2 = textInputs2ndSetQuestion.toArray(new String[0]);
-
-                // Perform fuzzy clustering for both sets of questions and get the final evaluation
-                String finalEvaluation1 = getFinalEvaluation(textBoxes);
-                String finalEvaluation2 = getFinalEvaluation(textBoxes2);
-
-                // Combine the final evaluations
-                String combinedResult = "Final Evaluation for 1st set:\n" + finalEvaluation1 + "\n\n" +
-                        "Final Evaluation for 2nd set:\n" + finalEvaluation2;
-
-                // Display the final evaluation in a popup dialog
-                AlertDialog.Builder builder = new AlertDialog.Builder(Student_Test5Activity.this);
-                builder.setTitle("Final Evaluation");
-                builder.setMessage(combinedResult);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User clicked OK button
-                        dialog.dismiss();
+                if (validateInput(editTextText11) && validateInput(editTextText12) && validateInput(editTextText13)){
+                    // Check if textInputs is null or empty
+                    if (textInputs == null || textInputs.isEmpty()) {
+                        Toast.makeText(Student_Test5Activity.this, "No data to process!", Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
 
-                // Log the final evaluations
-                Log.d("FinalEvaluation for 1st set:", finalEvaluation1);
-                Log.d("FinalEvaluation for 2nd set:", finalEvaluation2);
+                    appendInputs();
+                    // Convert ArrayList<String> to String[]
+                    String[] textBoxes = textInputs.toArray(new String[0]);
+                    String[] textBoxes2 = textInputs2ndSetQuestion.toArray(new String[0]);
 
-                // Store the results in Firebase Realtime Database
-                storeResultsInFirebase(finalEvaluation1, finalEvaluation2);
+                    // Perform fuzzy clustering for both sets of questions and get the final evaluation
+                    String finalEvaluation1 = getFinalEvaluation(textBoxes);
+                    String finalEvaluation2 = getFinalEvaluation(textBoxes2);
+
+                    // Combine the final evaluations
+                    String combinedResult = "Final Evaluation for 1st set:\n" + finalEvaluation1 + "\n\n" +
+                            "Final Evaluation for 2nd set:\n" + finalEvaluation2;
+
+                    // Display the final evaluation in a popup dialog
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Student_Test5Activity.this);
+                    builder.setTitle("Final Evaluation");
+                    builder.setMessage(combinedResult);
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User clicked OK button
+                            dialog.dismiss();
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                    // Log the final evaluations
+                    Log.d("FinalEvaluation for 1st set:", finalEvaluation1);
+                    Log.d("FinalEvaluation for 2nd set:", finalEvaluation2);
+
+                    // Store the results in Firebase Realtime Database
+                    storeResultsInFirebase(finalEvaluation1, finalEvaluation2);
+                }else {
+                    Toast.makeText(Student_Test5Activity.this, "Please correct the inputs", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -174,6 +185,56 @@ public class Student_Test5Activity extends AppCompatActivity {
         textInputs2ndSetQuestion.add(editTextText11.getText().toString());
         textInputs2ndSetQuestion.add(editTextText12.getText().toString());
         textInputs2ndSetQuestion.add(editTextText13.getText().toString());
+    }
+
+
+    private boolean validateInput(EditText inputBox) {
+        String input = inputBox.getText().toString().trim();
+
+        // Check if the input is empty
+        if (input.isEmpty()) {
+            inputBox.setError("Field cannot be empty");
+            return false;
+        }
+
+        // Check if the input is a number
+        try {
+            int number = Integer.parseInt(input);
+
+            // Check if the number is 1, 2, or 3
+            if (number < 1 || number > 3) {
+                inputBox.setError("Input must be 1, 2, or 3");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            // If the input is not a number, show an error
+            inputBox.setError("Input must be a number");
+            return false;
+        }
+
+        // Clear any previous error
+        inputBox.setError(null);
+        return true; // Input is valid
+    }
+
+    private void addTextWatcher(EditText editText) {
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not needed
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Validate input on every key press
+                validateInput(editText);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Not needed
+            }
+        });
     }
 
 
