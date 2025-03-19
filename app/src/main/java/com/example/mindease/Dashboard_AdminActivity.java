@@ -35,5 +35,41 @@ public class Dashboard_AdminActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        // Find the view by ID
+        View view = findViewById(R.id.view);
+
+        // Set an OnClickListener on the view
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an Intent to start the new activity
+                Intent intent = new Intent(Dashboard_AdminActivity.this, Admin_Mild_Takers_ResultActivity.class);
+                startActivity(intent);
+            }
+        });
+        // Find the view by ID
+        View view3 = findViewById(R.id.view3);
+
+        // Set an OnClickListener on the view
+        view3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an Intent to start the new activity
+                Intent intent = new Intent(Dashboard_AdminActivity.this, Admin_Moderate_Takers_ResultActivity.class);
+                startActivity(intent);
+            }
+        });
+        // Find the view by ID
+        View view4 = findViewById(R.id.view4);
+
+        // Set an OnClickListener on the view
+        view4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an Intent to start the new activity
+                Intent intent = new Intent(Dashboard_AdminActivity.this, Admin_Moderate_Takers_ResultActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

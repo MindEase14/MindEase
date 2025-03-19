@@ -16,6 +16,15 @@
         android:theme="@style/Theme.MindEase"
         tools:targetApi="31">
         <activity
+            android:name=".Admin_Severe_Takers_ResultActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Admin_Moderate_Takers_ResultActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Admin_Mild_Takers_ResultActivity"
+            android:exported="false" />
+        <activity
             android:name=".Admin_Minimal_Takers_ResultActivity"
             android:exported="false" />
         <activity
