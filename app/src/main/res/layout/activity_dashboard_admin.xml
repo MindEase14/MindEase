@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Sie Gen Ring"
+        android:text=""
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -193,7 +193,7 @@
         app:srcCompat="@drawable/person" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/minimalTakers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="100"
@@ -206,7 +206,7 @@
         tools:ignore="HardcodedText" />
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/mildTakers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="100"
@@ -219,7 +219,7 @@
         tools:ignore="HardcodedText" />
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/moderateTakers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="100"
@@ -232,7 +232,7 @@
         tools:ignore="HardcodedText" />
 
     <TextView
-        android:id="@+id/textView14"
+        android:id="@+id/severeTakers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="100"

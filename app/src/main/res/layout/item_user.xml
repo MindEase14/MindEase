@@ -17,6 +17,17 @@
         android:gravity="center"/>
 
     <TextView
+        android:id="@+id/result"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/black"
+        android:text="Result"
+        android:background="@color/white"
+        android:textSize="16sp"
+        android:gravity="center"/>
+
+    <TextView
         android:id="@+id/dateTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

@@ -2,18 +2,19 @@ package com.example.mindease;
 
 public class User {
     private String name;
-    private String date;
+    private String timestamp;
+    private String userId;
+    private String evaluationKey;
 
-    public User(String name, String date) {
+    public User(String name, String timestamp, String userId, String evaluationKey) {
         this.name = name;
-        this.date = date;
+        this.timestamp = timestamp;
+        this.userId = userId;
+        this.evaluationKey = evaluationKey;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDate() {
-        return date;
-    }
+    public String getName() { return name; }
+    public String getTimestamp() { return timestamp; }
+    public String getUserId() { return userId; }
+    public String getEvaluationKey() { return evaluationKey; }
 }
