@@ -67,7 +67,7 @@ public class Dashboard_AdminActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Create an Intent to start the new activity
-                Intent intent = new Intent(Dashboard_AdminActivity.this, Admin_Moderate_Takers_ResultActivity.class);
+                Intent intent = new Intent(Dashboard_AdminActivity.this, Admin_Severe_Takers_ResultActivity.class);
                 startActivity(intent);
             }
         });
