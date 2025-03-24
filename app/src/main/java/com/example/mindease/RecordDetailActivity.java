@@ -8,8 +8,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class RecordDetailActivity extends AppCompatActivity {
     @Override
@@ -38,13 +36,25 @@ public class RecordDetailActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 StringBuilder details = new StringBuilder();
 
-                // Skip timestamp as we already show the date in the title
                 for (DataSnapshot questionSnapshot : dataSnapshot.getChildren()) {
-                    if (!"timestamp".equals(questionSnapshot.getKey())) {
-                        details.append(questionSnapshot.getKey())
-                                .append(": ")
-                                .append(questionSnapshot.getValue(String.class))
-                                .append("\n\n");
+                    String key = questionSnapshot.getKey();
+
+                    // Skip timestamp and any other non-question fields
+                    if ("timestamp".equals(key)) {
+                        continue;
+                    }
+
+                    // Parse set number and question number from keys like "set1_question2"
+                    if (key != null && key.contains("_question")) {
+                        String[] parts = key.split("_question");
+                        if (parts.length == 2) {
+                            String setNumber = parts[0].replace("set", "");
+                            String questionNumber = parts[1];
+                            details.append("set").append(setNumber).append(" - Q").append(questionNumber)
+                                    .append(": ")
+                                    .append(questionSnapshot.getValue(String.class))
+                                    .append("\n\n");
+                        }
                     }
                 }
 
