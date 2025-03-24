@@ -1,6 +1,10 @@
 package com.example.mindease;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -9,11 +13,12 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Student_HistoryActivity extends AppCompatActivity {
-
+    String uid = "";
     private RecyclerView recyclerView;
     private HistoryAdapter adapter;
 
@@ -29,23 +34,28 @@ public class Student_HistoryActivity extends AppCompatActivity {
             return insets;
         });
 
+        uid = FirebaseUtils.getCurrentUserUID();
+        if (uid == null) {
+            Log.d("User", "No user logged in");
+            Toast.makeText(this, "Please log in to view history", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        Log.d("User", "Current userID logged in: " + uid);
+
         // Initialize RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
-
-        // Set layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Create static data
-        List<HistoryItem> historyItems = new ArrayList<>();
-        historyItems.add(new HistoryItem("2023-11-15", "Completed stress management workshop"));
-        historyItems.add(new HistoryItem("2023-11-10", "Counseling session with Dr. Johnson"));
-        historyItems.add(new HistoryItem("2023-11-05", "Submitted weekly mood tracker"));
-        historyItems.add(new HistoryItem("2023-10-28", "Attended group therapy session"));
-        historyItems.add(new HistoryItem("2023-10-20", "Completed depression screening"));
-        historyItems.add(new HistoryItem("2023-10-15", "Initial consultation with counselor"));
-
-        // Set up adapter
-        adapter = new HistoryAdapter(historyItems);
+        // Initialize adapter with empty list and click listener
+        adapter = new HistoryAdapter(new ArrayList<>(), item -> {
+            // Start detail activity when item is clicked
+            Intent intent = new Intent(Student_HistoryActivity.this, RecordDetailActivity.class);
+            intent.putExtra("uid", uid);
+            intent.putExtra("recordKey", item.getRecordKey());
+            startActivity(intent);
+        });
         recyclerView.setAdapter(adapter);
 
         // Add divider between items
@@ -54,5 +64,28 @@ public class Student_HistoryActivity extends AppCompatActivity {
                 DividerItemDecoration.VERTICAL
         );
         recyclerView.addItemDecoration(dividerItemDecoration);
+
+        // Fetch data from Firebase
+        fetchHistoryData();
+    }
+
+    private void fetchHistoryData() {
+        FirebaseHistoryHelper.fetchUserHistory(uid, new FirebaseHistoryHelper.HistoryDataListener() {
+            @Override
+            public void onHistoryDataLoaded(List<HistoryItem> historyItems) {
+                if (historyItems.isEmpty()) {
+                    Toast.makeText(Student_HistoryActivity.this, "No history records found", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Update the adapter with new data
+                    adapter.updateData(historyItems);
+                }
+            }
+
+            @Override
+            public void onHistoryDataError(String errorMessage) {
+                Toast.makeText(Student_HistoryActivity.this, "Error loading history: " + errorMessage, Toast.LENGTH_SHORT).show();
+                Log.e("FirebaseError", errorMessage);
+            }
+        });
     }
 }

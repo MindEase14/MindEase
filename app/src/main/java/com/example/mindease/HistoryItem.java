@@ -1,19 +1,25 @@
 package com.example.mindease;
 
 public class HistoryItem {
-    private String date;
-    private String description;
+    private String formattedDate;
+    private long timestamp;
+    private String recordKey;
 
-    public HistoryItem(String date, String description) {
-        this.date = date;
-        this.description = description;
+    public HistoryItem(String formattedDate, long timestamp, String recordKey) {
+        this.formattedDate = formattedDate;
+        this.timestamp = timestamp;
+        this.recordKey = recordKey;
     }
 
-    public String getDate() {
-        return date;
+    public String getFormattedDate() {
+        return formattedDate;
     }
 
-    public String getDescription() {
-        return description;
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public String getRecordKey() {
+        return recordKey;
     }
 }

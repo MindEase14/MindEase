@@ -4,33 +4,47 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
 
-public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
-
+public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
     private List<HistoryItem> historyItems;
+    private OnItemClickListener listener;
 
-    public HistoryAdapter(List<HistoryItem> historyItems) {
+    public interface OnItemClickListener {
+        void onItemClick(HistoryItem item);
+    }
+
+    public HistoryAdapter(List<HistoryItem> historyItems, OnItemClickListener listener) {
         this.historyItems = historyItems;
+        this.listener = listener;
+    }
+
+    public void updateData(List<HistoryItem> newItems) {
+        this.historyItems.clear();
+        this.historyItems.addAll(newItems);
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_history, parent, false);
-        return new HistoryViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HistoryItem item = historyItems.get(position);
-        holder.date.setText(item.getDate());
-        holder.description.setText(item.getDescription());
+        holder.dateTextView.setText(item.getFormattedDate());
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(item);
+            }
+        });
     }
 
     @Override
@@ -38,13 +52,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         return historyItems.size();
     }
 
-    public static class HistoryViewHolder extends RecyclerView.ViewHolder {
-        TextView date, description;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView dateTextView;
 
-        public HistoryViewHolder(@NonNull View itemView) {
-            super(itemView);
-            date = itemView.findViewById(R.id.historyDate);
-            description = itemView.findViewById(R.id.historyDescription);
+        public ViewHolder(View view) {
+            super(view);
+            dateTextView = view.findViewById(R.id.dateTextView); // Make sure this ID matches your XML
         }
     }
 }

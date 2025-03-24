@@ -7,23 +7,10 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/historyDate"
-        android:layout_width="wrap_content"
+        android:id="@+id/dateTextView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
-
-    <TextView
-        android:id="@+id/historyDescription"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/historyDate"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

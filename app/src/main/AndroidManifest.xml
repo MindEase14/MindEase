@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MindEase"
         tools:targetApi="31">
+        <activity android:name=".RecordDetailActivity" />
         <activity
             android:name=".Student_HistoryActivity"
             android:exported="false" />
