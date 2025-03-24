@@ -114,5 +114,13 @@ public class Dashboard_StudentActivity extends AppCompatActivity {
                 System.err.println("Failed to fetch records: " + databaseError.getMessage());
             }
         });
+        Button button2 = findViewById(R.id.button2);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Dashboard_StudentActivity.this, Student_HistoryActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

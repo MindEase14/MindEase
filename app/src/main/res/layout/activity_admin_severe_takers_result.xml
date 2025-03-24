@@ -49,8 +49,8 @@
 
     <View
         android:id="@+id/view2"
-        android:layout_width="276dp"
-        android:layout_height="62dp"
+        android:layout_width="318dp"
+        android:layout_height="68dp"
         android:layout_marginTop="40dp"
         android:background="@drawable/rounded_button"
         app:layout_constraintEnd_toEndOf="parent"
