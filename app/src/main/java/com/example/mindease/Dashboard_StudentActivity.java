@@ -3,8 +3,8 @@ package com.example.mindease;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -34,92 +34,101 @@ public class Dashboard_StudentActivity extends AppCompatActivity {
         });
 
         uid = FirebaseUtils.getCurrentUserUID();
-        if (uid != null) {
-            Log.d("User", "Current userID logged in: " + uid);
-
-        } else {
+        if (uid == null) {
             Log.d("User", "No user logged in");
+            Toast.makeText(this, "Please log in first", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
         }
 
-        Button button1 = findViewById(R.id.button1);
-        Button button2 = findViewById(R.id.button2);
+        TextView usernameTextView = findViewById(R.id.textView6);
+        DatabaseReference usernameRef = FirebaseDatabase.getInstance().getReference()
+                .child("users")
+                .child("students")
+                .child(uid)
+                .child("username");
 
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // store email and start the next activity
-                Intent intent = new Intent(Dashboard_StudentActivity.this, Student_TestActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fetchUserRecords(uid);
-            }
-        });
-    }
-
-    public void fetchUserRecords(String userUid) {
-        // Get a reference to the Firebase Realtime Database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userRecordsRef = database.getReference("records").child(userUid);
-
-        // Attach a listener to read the data
-        userRecordsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        usernameRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // Data exists for the given user UID
-                    for (DataSnapshot recordSnapshot : dataSnapshot.getChildren()) {
-                        // Process each record under the user UID
-                        String recordId = recordSnapshot.getKey(); // Get the random hash (record ID)
-                        String finalEvaluation1 = recordSnapshot.child("finalEvaluation1").getValue(String.class);
-                        String finalEvaluation2 = recordSnapshot.child("finalEvaluation2").getValue(String.class);
-                        long timestamp = recordSnapshot.child("timestamp").getValue(Long.class);
-
-                        // Example: Print the fetched data
-                        Log.d("User", "Record ID: " + recordId);
-                        Log.d("User", "Final Evaluation 1: " + finalEvaluation1);
-                        Log.d("User", "Final Evaluation 2: " + finalEvaluation2);
-                        Log.d("User", "Timestamp: " + timestamp);
-
-                        // You can also process the questions if needed
-                        for (DataSnapshot questionSnapshot : recordSnapshot.getChildren()) {
-                            if (questionSnapshot.getKey().startsWith("set1_question")) {
-                                String questionKey = questionSnapshot.getKey();
-                                String answer = questionSnapshot.getValue(String.class);
-                                Log.d("test questions1", questionKey+": " +answer);
-                            }
-                        }
-                        // You can also process the questions if needed
-                        for (DataSnapshot questionSnapshot : recordSnapshot.getChildren()) {
-                            if (questionSnapshot.getKey().startsWith("set2_question")) {
-                                String questionKey = questionSnapshot.getKey();
-                                String answer = questionSnapshot.getValue(String.class);
-                                Log.d("test questions2", questionKey+": " +answer);
-                            }
-                        }
-                    }
+                    String username = dataSnapshot.getValue(String.class);
+                    usernameTextView.setText(username);
                 } else {
-                    // No data exists for the given user UID
-                    System.out.println("No records found for user UID: " + userUid);
+                    usernameTextView.setText("Username not found");
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Handle errors
-                System.err.println("Failed to fetch records: " + databaseError.getMessage());
+                Log.e("FirebaseError", "Username fetch failed: " + databaseError.getMessage());
+                usernameTextView.setText("Error loading username");
             }
         });
+
+        Log.d("User", "Current userID logged in: " + uid);
+
+        Button button1 = findViewById(R.id.button1);
         Button button2 = findViewById(R.id.button2);
-        button2.setOnClickListener(new View.OnClickListener() {
+
+        button1.setOnClickListener(v -> {
+            Intent intent = new Intent(Dashboard_StudentActivity.this, Student_TestActivity.class);
+            startActivity(intent);
+        });
+
+        button2.setOnClickListener(v -> {
+            Intent intent = new Intent(Dashboard_StudentActivity.this, Student_HistoryActivity.class);
+            startActivity(intent);
+        });
+    }
+
+    public void fetchUserRecords(String userUid) {
+        if (userUid == null || userUid.isEmpty()) {
+            Toast.makeText(this, "Invalid user ID", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userRecordsRef = database.getReference("records").child(userUid);
+
+        userRecordsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Dashboard_StudentActivity.this, Student_HistoryActivity.class);
-                startActivity(intent);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot recordSnapshot : dataSnapshot.getChildren()) {
+                        String recordId = recordSnapshot.getKey();
+                        String finalEvaluation1 = recordSnapshot.child("finalEvaluation1").getValue(String.class);
+                        String finalEvaluation2 = recordSnapshot.child("finalEvaluation2").getValue(String.class);
+                        Long timestamp = recordSnapshot.child("timestamp").getValue(Long.class);
+
+                        Log.d("User", "Record ID: " + recordId);
+                        Log.d("User", "Final Evaluation 1: " + finalEvaluation1);
+                        Log.d("User", "Final Evaluation 2: " + finalEvaluation2);
+                        Log.d("User", "Timestamp: " + timestamp);
+
+                        for (DataSnapshot questionSnapshot : recordSnapshot.getChildren()) {
+                            String questionKey = questionSnapshot.getKey();
+                            if (questionKey != null) {
+                                if (questionKey.startsWith("set1_question")) {
+                                    String answer = questionSnapshot.getValue(String.class);
+                                    Log.d("test questions1", questionKey + ": " + answer);
+                                } else if (questionKey.startsWith("set2_question")) {
+                                    String answer = questionSnapshot.getValue(String.class);
+                                    Log.d("test questions2", questionKey + ": " + answer);
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    Log.d("User", "No records found for user UID: " + userUid);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("FirebaseError", "Failed to fetch records: " + databaseError.getMessage());
+                Toast.makeText(Dashboard_StudentActivity.this,
+                        "Failed to load records", Toast.LENGTH_SHORT).show();
             }
         });
     }
