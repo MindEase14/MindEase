@@ -32,13 +32,6 @@ public class Admin_LogInActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        Button button2= findViewById(R.id.button2);
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Admin_LogInActivity.this, Register_AdminActivity.class);
-                startActivity(intent);
-            }
-        });
+
     }
 }
