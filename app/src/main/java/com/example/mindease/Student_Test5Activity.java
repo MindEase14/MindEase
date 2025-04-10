@@ -149,6 +149,9 @@ public class Student_Test5Activity extends AppCompatActivity {
 
                     // Store the results in Firebase Realtime Database
                     storeResultsInFirebase(finalEvaluation1, finalEvaluation2);
+                    // Create an Intent to open the User_Graph_Result activity
+                    Intent intent = new Intent(Student_Test5Activity.this, User_Graph_ResultActivity.class);
+                    startActivity(intent);
                 }else {
                     Toast.makeText(Student_Test5Activity.this, "Please correct the inputs", Toast.LENGTH_SHORT).show();
                 }
