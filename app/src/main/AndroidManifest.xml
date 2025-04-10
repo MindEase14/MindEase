@@ -15,6 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MindEase"
         tools:targetApi="31">
+        <activity
+            android:name=".Admin_General_Anxiety_SettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Admin_Set_DiagnosticActivity"
+            android:exported="false" />
         <activity android:name=".RecordDetailActivity" />
         <activity
             android:name=".Student_HistoryActivity"

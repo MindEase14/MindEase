@@ -71,6 +71,14 @@ public class Dashboard_AdminActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        View view5 = findViewById(R.id.view5);
+        view5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Dashboard_AdminActivity.this, Admin_Set_DiagnosticActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initializeViews() {
