@@ -106,9 +106,9 @@ public class Student_Test3Activity extends AppCompatActivity {
         try {
             int number = Integer.parseInt(input);
 
-            // Check if the number is 1, 2, or 3
-            if (number < 1 || number > 3) {
-                inputBox.setError("Input must be 1, 2, or 3");
+            // Check if the number is between 0 and 3 (inclusive)
+            if (number < 0 || number > 3) {
+                inputBox.setError("Input must be 0, 1, 2, or 3");
                 return false;
             }
         } catch (NumberFormatException e) {

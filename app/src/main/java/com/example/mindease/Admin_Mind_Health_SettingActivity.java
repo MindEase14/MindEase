@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class Admin_General_Anxiety_SettingActivity extends AppCompatActivity {
+public class Admin_Mind_Health_SettingActivity extends AppCompatActivity {
     private EditText setname, minimal, mild, moderate, severe;
 
     @Override
@@ -27,7 +27,7 @@ public class Admin_General_Anxiety_SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_admin_general_anxiety_setting);
+        setContentView(R.layout.activity_admin_mind_health_setting);
 
         // Window insets handling
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -57,7 +57,7 @@ public class Admin_General_Anxiety_SettingActivity extends AppCompatActivity {
 
 // Reference to database
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference ref = database.getReference("generalAnxietyTestSetting").child(name);
+                    DatabaseReference ref = database.getReference("mindHealthTestSetting").child(name);
 
 // Create a map to hold the data
                     Map<String, Object> data = new HashMap<>();
@@ -70,10 +70,10 @@ public class Admin_General_Anxiety_SettingActivity extends AppCompatActivity {
 // Push data to Firebase
                     ref.setValue(data).addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            Toast.makeText(Admin_General_Anxiety_SettingActivity.this,
+                            Toast.makeText(Admin_Mind_Health_SettingActivity.this,
                                     "Data saved successfully!", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(Admin_General_Anxiety_SettingActivity.this,
+                            Toast.makeText(Admin_Mind_Health_SettingActivity.this,
                                     "Failed to save data.", Toast.LENGTH_SHORT).show();
                         }
                         clearField(setname);

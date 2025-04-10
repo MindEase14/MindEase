@@ -107,4 +107,19 @@
         app:layout_constraintStart_toEndOf="@id/textView4"
         app:layout_constraintTop_toTopOf="@id/textView4" />
 
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_button"
+        android:text="Set"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="HardcodedText"
+        tools:layout_editor_absoluteY="497dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

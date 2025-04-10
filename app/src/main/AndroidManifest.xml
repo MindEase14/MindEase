@@ -16,6 +16,9 @@
         android:theme="@style/Theme.MindEase"
         tools:targetApi="31">
         <activity
+            android:name=".Admin_Mind_Health_SettingActivity"
+            android:exported="false" />
+        <activity
             android:name=".User_Graph_ResultActivity"
             android:exported="false" />
         <activity

@@ -111,55 +111,46 @@ public class Student_Test5Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validateInput(editTextText11) && validateInput(editTextText12) && validateInput(editTextText13)){
-                    // Check if textInputs is null or empty
                     if (textInputs == null || textInputs.isEmpty()) {
                         Toast.makeText(Student_Test5Activity.this, "No data to process!", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     appendInputs();
-                    // Convert ArrayList<String> to String[]
                     String[] textBoxes = textInputs.toArray(new String[0]);
                     String[] textBoxes2 = textInputs2ndSetQuestion.toArray(new String[0]);
 
-                    // Perform fuzzy clustering for both sets of questions and get the final evaluation
-                    String finalEvaluation1 = getFinalEvaluation(textBoxes);
-                    String finalEvaluation2 = getFinalEvaluation(textBoxes2);
+                    // Get numeric results
+                    int finalEvaluation1 = getFinalEvaluation(textBoxes);
+                    int finalEvaluation2 = getFinalEvaluation(textBoxes2);
 
-                    // Combine the final evaluations
-                    String combinedResult = "Final Evaluation for 1st set:\n" + finalEvaluation1 + "\n\n" +
-                            "Final Evaluation for 2nd set:\n" + finalEvaluation2;
-
-                    // Display the final evaluation in a popup dialog
+                    // Display simple result dialog
                     AlertDialog.Builder builder = new AlertDialog.Builder(Student_Test5Activity.this);
-                    builder.setTitle("Final Evaluation");
-                    builder.setMessage(combinedResult);
+                    builder.setTitle("Evaluation Results");
+                    builder.setMessage("1st Set Result: " + finalEvaluation1 + "\n" +
+                            "2nd Set Result: " + finalEvaluation2);
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            // User clicked OK button
                             dialog.dismiss();
                         }
                     });
                     AlertDialog dialog = builder.create();
                     dialog.show();
 
-                    // Log the final evaluations
-                    Log.d("FinalEvaluation for 1st set:", finalEvaluation1);
-                    Log.d("FinalEvaluation for 2nd set:", finalEvaluation2);
-
-                    // Store the results in Firebase Realtime Database
+                    // Store the numeric results in Firebase
                     storeResultsInFirebase(finalEvaluation1, finalEvaluation2);
-                    // Create an Intent to open the User_Graph_Result activity
+
+                    // Open next activity
                     Intent intent = new Intent(Student_Test5Activity.this, User_Graph_ResultActivity.class);
                     startActivity(intent);
-                }else {
+                } else {
                     Toast.makeText(Student_Test5Activity.this, "Please correct the inputs", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    private String getFinalEvaluation(String[] textBoxes) {
+    private int getFinalEvaluation(String[] textBoxes) {
         try {
             double[] responses = new double[textBoxes.length];
             for (int i = 0; i < textBoxes.length; i++) {
@@ -177,10 +168,11 @@ public class Student_Test5Activity extends AppCompatActivity {
                 clusters[i] = getCluster(memberships[i]);
             }
 
-            // Get the overall conclusion
+            // Return just the numeric value
             return getOverallClusterConclusion(clusters);
         } catch (Exception ex) {
-            return "An error occurred in getFinalEvaluation(): " + ex.getMessage();
+            Log.e("EvaluationError", "Error in getFinalEvaluation: " + ex.getMessage());
+            return -1; // Error value
         }
     }
 
@@ -204,9 +196,9 @@ public class Student_Test5Activity extends AppCompatActivity {
         try {
             int number = Integer.parseInt(input);
 
-            // Check if the number is 1, 2, or 3
-            if (number < 1 || number > 3) {
-                inputBox.setError("Input must be 1, 2, or 3");
+            // Check if the number is between 0 and 3 (inclusive)
+            if (number < 0 || number > 3) {
+                inputBox.setError("Input must be 0, 1, 2, or 3");
                 return false;
             }
         } catch (NumberFormatException e) {
@@ -238,42 +230,6 @@ public class Student_Test5Activity extends AppCompatActivity {
                 // Not needed
             }
         });
-    }
-
-
-
-    private String performFuzzyClustering(String[] textBoxes) {
-        try {
-            double[] responses = new double[textBoxes.length];
-            for (int i = 0; i < textBoxes.length; i++) {
-                responses[i] = parseResponse(textBoxes[i]);
-            }
-
-            int numClusters = 4; // Minimal, Mild, Moderate, Severe
-            double[][] memberships = initializeMembershipMatrix(responses.length, numClusters);
-            double[] centroids = {0.5, 1.5, 2.5, 3.0};
-
-            performFCM(responses, centroids, memberships, numClusters);
-
-            StringBuilder result = new StringBuilder();
-            result.append("Anxiety Assessment Results:\n");
-
-            int[] clusters = new int[responses.length];
-
-            for (int i = 0; i < responses.length; i++) {
-                int cluster = getCluster(memberships[i]);
-                clusters[i] = cluster; // Store cluster for overall calculation
-                String category = clusterToCategory(cluster);
-                result.append("Response: " + responses[i] + " → " + category + "\n");
-            }
-
-            String overallConclusion = getOverallClusterConclusion(clusters);
-            result.append(overallConclusion);
-
-            return result.toString();
-        } catch (Exception ex) {
-            return "An error occurred in performFuzzyClustering(): " + ex.getMessage();
-        }
     }
 
     private double parseResponse(String input) throws NumberFormatException {
@@ -367,22 +323,12 @@ public class Student_Test5Activity extends AppCompatActivity {
         return maxIndex;
     }
 
-    private String clusterToCategory(int cluster) {
-        switch (cluster) {
-            case 0:
-                return "Minimal Anxiety - Continue with your regular routine, but consider practicing stress-reduction strategies occasionally.";
-            case 1:
-                return "Mild Anxiety - Try engaging in self-care practices such as exercise, meditation, or talking to someone about your feelings.";
-            case 2:
-                return "Moderate Anxiety - Consider practicing relaxation techniques, mindfulness, or seeking professional guidance to manage anxiety.";
-            case 3:
-                return "Severe Anxiety - It is highly recommended to seek professional help, such as therapy or counseling, to address severe anxiety symptoms.";
-            default:
-                return "Please seek professional help if needed.";
-        }
+    private int clusterToCategory(int cluster) {
+        // Just return the numeric value (1-4)
+        return cluster + 1; // Since clusters are 0-3, add 1 to make them 1-4
     }
 
-    private String getOverallClusterConclusion(int[] clusters) {
+    private int getOverallClusterConclusion(int[] clusters) {
         // Step 1: Count occurrences of each cluster
         HashMap<Integer, Integer> clusterCounts = new HashMap<>();
         for (int cluster : clusters) {
@@ -399,11 +345,8 @@ public class Student_Test5Activity extends AppCompatActivity {
             }
         }
 
-        // Step 3: Map the cluster to its corresponding category
-        String category = clusterToCategory(maxCluster);
-
-        // Step 4: Return the formatted result
-        return "\n" + category;
+        // Step 3: Return the numeric value (1-4)
+        return maxCluster + 1;
     }
 
     private boolean allResponsesEqual(double[] responses) {
@@ -428,38 +371,36 @@ public class Student_Test5Activity extends AppCompatActivity {
     }
 
     // Function to store results in Firebase Realtime Database
-    private void storeResultsInFirebase(String finalEvaluation1, String finalEvaluation2) {
-        // Get a reference to the Firebase Realtime Database
+    private void storeResultsInFirebase(int finalEvaluation1, int finalEvaluation2) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference recordsRef = database.getReference("records/"+uid+"/");
+        DatabaseReference recordsRef = database.getReference("records/" + uid + "/");
 
-        // Create a unique key for the record
         String recordId = recordsRef.push().getKey();
 
-        // Create a map to store the results
         Map<String, Object> recordMap = new HashMap<>();
 
         // Store the first set of inputs
         for (int i = 0; i < textInputs.size(); i++) {
-            recordMap.put("set1_question" + (i + 1), textInputs.get(i)); // Use get(i) instead of indexOf(i)
+            recordMap.put("set1_question" + (i + 1), textInputs.get(i));
         }
 
         // Store the second set of inputs
         for (int i = 0; i < textInputs2ndSetQuestion.size(); i++) {
-            recordMap.put("set2_question" + (i + 1), textInputs2ndSetQuestion.get(i)); // Use get(i) instead of indexOf(i)
+            recordMap.put("set2_question" + (i + 1), textInputs2ndSetQuestion.get(i));
         }
 
-        // Store the final evaluations and timestamp
+        // Store numeric evaluations using "finalEvaluation1" and "finalEvaluation2"
         recordMap.put("finalEvaluation1", finalEvaluation1);
         recordMap.put("finalEvaluation2", finalEvaluation2);
-        recordMap.put("timestamp", System.currentTimeMillis()); // Add a timestamp
 
-        // Store the results in the database
+        // Timestamp
+        recordMap.put("timestamp", System.currentTimeMillis());
+
         if (recordId != null) {
             recordsRef.child(recordId).setValue(recordMap)
                     .addOnSuccessListener(aVoid -> {
                         Log.d("Firebase", "Results stored successfully!");
-                        Toast.makeText(Student_Test5Activity.this, "Results saved to database!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Student_Test5Activity.this, "Results saved!", Toast.LENGTH_SHORT).show();
                     })
                     .addOnFailureListener(e -> {
                         Log.e("Firebase", "Failed to store results: " + e.getMessage());
@@ -467,5 +408,6 @@ public class Student_Test5Activity extends AppCompatActivity {
                     });
         }
     }
+
 
 }

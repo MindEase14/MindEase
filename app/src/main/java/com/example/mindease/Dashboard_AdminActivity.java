@@ -120,23 +120,44 @@ public class Dashboard_AdminActivity extends AppCompatActivity {
 
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     for (DataSnapshot evalSnapshot : userSnapshot.getChildren()) {
-                        Map<String, Object> eval = (Map<String, Object>) evalSnapshot.getValue();
-                        String evaluationText = eval.get("finalEvaluation1").toString().toLowerCase();
-                        String timestamp = eval.get("timestamp").toString();
+                        try {
+                            Map<String, Object> eval = (Map<String, Object>) evalSnapshot.getValue();
+                            if (eval == null) continue;
 
-                        if (isCurrentMonth(timestamp)) {
-                            if (evaluationText.contains("minimal")) minimal++;
-                            else if (evaluationText.contains("mild")) mild++;
-                            else if (evaluationText.contains("moderate")) moderate++;
-                            else if (evaluationText.contains("severe")) severe++;
+                            // Safely get evaluation and timestamp
+                            Object evalObj = eval.get("finalEvaluation1");
+                            Object timestampObj = eval.get("timestamp");
+
+                            if (evalObj == null || timestampObj == null) continue;
+
+                            String evaluationText = evalObj.toString().toLowerCase();
+                            String timestamp = timestampObj.toString();
+
+                            // Skip if not current month
+                            if (!isCurrentMonth(timestamp)) continue;
+
+                            // Count based on evaluation text
+                            if (evaluationText.contains("minimal") || evaluationText.contains("1")) minimal++;
+                            else if (evaluationText.contains("mild") || evaluationText.contains("2")) mild++;
+                            else if (evaluationText.contains("moderate") || evaluationText.contains("3")) moderate++;
+                            else if (evaluationText.contains("severe") || evaluationText.contains("4")) severe++;
+                        } catch (Exception e) {
+                            Log.e("DataError", "Error processing record: " + e.getMessage());
                         }
                     }
                 }
 
-                minimalTakers.setText(String.valueOf(minimal));
-                mildTakers.setText(String.valueOf(mild));
-                moderateTakers.setText(String.valueOf(moderate));
-                severeTakers.setText(String.valueOf(severe));
+                // Update UI on main thread
+                int finalMinimal = minimal;
+                int finalMild = mild;
+                int finalModerate = moderate;
+                int finalSevere = severe;
+                runOnUiThread(() -> {
+                    minimalTakers.setText(String.valueOf(finalMinimal));
+                    mildTakers.setText(String.valueOf(finalMild));
+                    moderateTakers.setText(String.valueOf(finalModerate));
+                    severeTakers.setText(String.valueOf(finalSevere));
+                });
             }
 
             @Override
@@ -147,6 +168,10 @@ public class Dashboard_AdminActivity extends AppCompatActivity {
     }
 
     private boolean isCurrentMonth(String timestampStr) {
+        if (timestampStr == null || timestampStr.isEmpty()) {
+            return false;
+        }
+
         try {
             long timestamp = Long.parseLong(timestampStr);
             Calendar evalCal = Calendar.getInstance();
@@ -156,6 +181,7 @@ public class Dashboard_AdminActivity extends AppCompatActivity {
             return evalCal.get(Calendar.MONTH) == currentCal.get(Calendar.MONTH)
                     && evalCal.get(Calendar.YEAR) == currentCal.get(Calendar.YEAR);
         } catch (NumberFormatException e) {
+            Log.e("TimestampError", "Invalid timestamp format: " + timestampStr);
             return false;
         }
     }

@@ -39,7 +39,7 @@ public class Admin_Set_DiagnosticActivity extends AppCompatActivity {
         view2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Admin_Set_DiagnosticActivity.this, Admin_General_Anxiety_SettingActivity.class);
+                Intent intent = new Intent(Admin_Set_DiagnosticActivity.this, Admin_Mind_Health_SettingActivity.class);
                 startActivity(intent);
             }
         });
