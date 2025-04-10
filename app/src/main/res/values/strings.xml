@@ -26,4 +26,14 @@
     <string name="clear">Clear</string>
     <string name="severe_takers">Severe Takers</string>
     <string name="sie_gen_gmail_com">Sie.gen@gmail.com</string>
+
+    <string-array name="test_options">
+        <item>General Anxiety Test</item>
+        <item>Mind Health Test</item>
+    </string-array>
+
+    <string-array name="name_options">
+        <item>General Anxiety Test</item>
+        <item>Mind Health Test</item>
+    </string-array>
 </resources>

@@ -33,5 +33,25 @@ public class Admin_Set_DiagnosticActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Click listener for view with id "view2"
+        View view2 = findViewById(R.id.view2);
+        view2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Admin_Set_DiagnosticActivity.this, Admin_General_Anxiety_SettingActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // ✅ Click listener for view with id "view3"
+        View view3 = findViewById(R.id.view3);
+        view3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Admin_Set_DiagnosticActivity.this, Admin_Diagnostic_SettingActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
