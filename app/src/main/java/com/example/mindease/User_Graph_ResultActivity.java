@@ -2,6 +2,7 @@ package com.example.mindease;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import java.util.ArrayList;
 
 public class User_Graph_ResultActivity extends AppCompatActivity {
+    private static final String TAG = "GraphActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,45 +35,74 @@ public class User_Graph_ResultActivity extends AppCompatActivity {
             return insets;
         });
 
-        LineChart lineChart;
-        lineChart = findViewById(R.id.lineChart);
+        // Initialize both line charts
+        LineChart lineChart1 = findViewById(R.id.lineChart1);
+        LineChart lineChart2 = findViewById(R.id.lineChart2);
 
-        // Sample data
-        int[] values = {1, 2, 1, 3, 1, 2, 1, 1};
-        String[] labels = {"q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8"};
+        // Get data from previous activity
+        ArrayList<String> set1 = getIntent().getStringArrayListExtra("set1");
+        ArrayList<String> set2 = getIntent().getStringArrayListExtra("set2");
 
+        // Configure both charts
+        setupChart(lineChart1, processData(set1, 7), "Anxiety Assessment (Q1-Q7)", Color.parseColor("#BA68C8"));
+        setupChart(lineChart2, processData(set2, 9), "Mental Health Assessment (Q1-Q9)", Color.parseColor("#4CAF50"));
+    }
+
+    private ArrayList<Float> processData(ArrayList<String> rawData, int expectedSize) {
+        ArrayList<Float> processed = new ArrayList<>();
+        if (rawData == null) return processed;
+
+        for (int i = 0; i < expectedSize; i++) {
+            try {
+                float value = i < rawData.size() ? Float.parseFloat(rawData.get(i)) : 0f;
+                processed.add(value);
+            } catch (NumberFormatException e) {
+                processed.add(0f);
+                Log.e(TAG, "Invalid data at position " + i);
+            }
+        }
+        return processed;
+    }
+
+    private void setupChart(LineChart chart, ArrayList<Float> values, String label, int color) {
         ArrayList<Entry> entries = new ArrayList<>();
-        for (int i = 0; i < values.length; i++) {
-            entries.add(new Entry(i, values[i]));
+        ArrayList<String> labels = new ArrayList<>();
+
+        // Create entries and labels
+        for (int i = 0; i < values.size(); i++) {
+            entries.add(new Entry(i, values.get(i)));
+            labels.add("Q" + (i + 1));
         }
 
-        LineDataSet dataSet = new LineDataSet(entries, "Result");
-        dataSet.setColor(Color.parseColor("#BA68C8"));
-        dataSet.setCircleColor(Color.parseColor("#BA68C8"));
+        LineDataSet dataSet = new LineDataSet(entries, label);
+        dataSet.setColor(color);
+        dataSet.setCircleColor(color);
         dataSet.setLineWidth(2f);
         dataSet.setCircleRadius(5f);
-        dataSet.setDrawValues(true);
         dataSet.setValueTextColor(Color.WHITE);
+        dataSet.setValueTextSize(10f);
 
         LineData lineData = new LineData(dataSet);
-        lineChart.setData(lineData);
-        lineChart.setBackgroundColor(Color.BLACK);
-        lineChart.getDescription().setEnabled(false);
-        lineChart.getLegend().setEnabled(false);
+        chart.setData(lineData);
+        chart.setBackgroundColor(Color.BLACK);
+        chart.getDescription().setEnabled(false);
+        chart.getLegend().setEnabled(false);
 
-        XAxis xAxis = lineChart.getXAxis();
+        // Configure X-axis
+        XAxis xAxis = chart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
         xAxis.setGranularity(1f);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextColor(Color.WHITE);
 
-        YAxis leftAxis = lineChart.getAxisLeft();
+        // Configure Y-axis
+        YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setGranularity(1f);
         leftAxis.setAxisMinimum(0f);
-        leftAxis.setAxisMaximum(4f);
+        leftAxis.setAxisMaximum(3f);
         leftAxis.setTextColor(Color.WHITE);
-        lineChart.getAxisRight().setEnabled(false);
+        chart.getAxisRight().setEnabled(false);
 
-        lineChart.invalidate(); // Refresh chart
+        chart.invalidate();
     }
 }
