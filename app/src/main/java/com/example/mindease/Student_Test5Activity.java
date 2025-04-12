@@ -138,7 +138,7 @@ public class Student_Test5Activity extends AppCompatActivity {
                         }
 
                         message.append("\nSet 2 (Mental Health)\n");
-                        for (int i = 0; i < textInputs2ndSetQuestion.size(); i++) {
+                        for (int i = 0; i < 9; i++) {
                             message.append("Question ").append(i + 1).append(" : ").append(textInputs2ndSetQuestion.get(i)).append("\n");
                         }
 
