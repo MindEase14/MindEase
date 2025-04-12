@@ -9,7 +9,7 @@
     tools:context=".User_Graph_ResultActivity">
 
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/lineChart1"
+        android:id="@+id/lineChart2"
         android:layout_width="0dp"
         android:layout_height="300dp"
         android:layout_margin="16dp"
@@ -21,7 +21,7 @@
         tools:ignore="MissingClass" />
 
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/lineChart2"
+        android:id="@+id/lineChart1"
         android:layout_width="0dp"
         android:layout_height="300dp"
         android:layout_margin="16dp"
