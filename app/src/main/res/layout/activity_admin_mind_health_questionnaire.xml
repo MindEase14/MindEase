@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:background="@color/black"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Admin_Mind_Health_QuestionnaireActivity">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="32dp">
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="128dp"
+                android:layout_height="141dp"
+                android:layout_marginTop="36dp"
+                android:importantForAccessibility="no"
+                app:layout_constraintEnd_toStartOf="@+id/textView1"
+                app:layout_constraintHorizontal_bias="0.457"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/logo" />
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="92dp"
+                android:layout_marginEnd="108dp"
+                android:text="@string/mindease"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="104dp"
+                android:text="     Mind Health Questionnaire"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView1"
+                tools:ignore="HardcodedText" />
+
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="48dp"
+                android:text="Set Q-Group"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/imageView1"
+                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                tools:ignore="HardcodedText,MissingConstraints" />
+
+            <EditText
+                android:id="@+id/editTextText1"
+                android:layout_width="159dp"
+                android:layout_height="23dp"
+                android:background="@drawable/rounded_button2"
+                android:ems="10"
+                android:inputType="text"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.217"
+                app:layout_constraintStart_toEndOf="@+id/textView3"
+                app:layout_constraintTop_toTopOf="@+id/textView3"
+                app:layout_constraintVertical_bias="1.0"
+                tools:ignore="Autofill,HardcodedText,LabelFor" />
+
+            <EditText
+                android:id="@+id/editTextText2"
+                android:layout_width="280dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="52dp"
+                android:background="@drawable/rounded_button2"
+                android:ems="10"
+                android:inputType="text"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/editTextText1"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/textView3"
+                app:layout_constraintTop_toBottomOf="@+id/editTextText1"
+                tools:ignore="Autofill,HardcodedText,LabelFor" />
+
+            <EditText
+                android:id="@+id/editTextText3"
+                android:layout_width="280dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/rounded_button2"
+                android:ems="10"
+                android:inputType="text"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/editTextText2"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/editTextText2"
+                app:layout_constraintTop_toBottomOf="@+id/editTextText2"
+                tools:ignore="Autofill,HardcodedText,LabelFor" />
+
+
+            <EditText
+                android:id="@+id/editTextText4"
+                android:layout_width="280dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/rounded_button2"
+                android:ems="10"
+                android:inputType="text"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/editTextText3"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/editTextText3"
+                app:layout_constraintTop_toBottomOf="@+id/editTextText3"
+                tools:ignore="Autofill,HardcodedText,LabelFor" />
+
+            <EditText
+                android:id="@+id/editTextText5"
+                android:layout_width="280dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/rounded_button2"
+                android:ems="10"
+                android:inputType="text"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/editTextText4"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/editTextText4"
+                app:layout_constraintTop_toBottomOf="@+id/editTextText4"
+                tools:ignore="Autofill,HardcodedText,LabelFor" />
+
+            <EditText
+                android:id="@+id/editTextText6"
+                android:layout_width="280dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="76dp"
+                android:background="@drawable/rounded_button2"
+                android:ems="10"
+                android:inputType="text"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/editTextText5"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/editTextText5"
+                app:layout_constraintTop_toBottomOf="@+id/editTextText4"
+                tools:ignore="Autofill,HardcodedText,LabelFor" />
+
+            <EditText
+                android:id="@+id/editTextText7"
+                android:layout_width="280dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="128dp"
+                android:background="@drawable/rounded_button2"
+                android:ems="10"
+                android:inputType="text"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/editTextText5"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/editTextText5"
+                app:layout_constraintTop_toBottomOf="@+id/editTextText4"
+                tools:ignore="Autofill,HardcodedText,LabelFor" />
+
+            <EditText
+                android:id="@+id/editTextText8"
+                android:layout_width="280dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="180dp"
+                android:background="@drawable/rounded_button2"
+                android:ems="10"
+                android:inputType="text"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/editTextText5"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/editTextText5"
+                app:layout_constraintTop_toBottomOf="@+id/editTextText4"
+                tools:ignore="Autofill,HardcodedText,LabelFor" />
+
+
+            <EditText
+                android:id="@+id/editTextText9"
+                android:layout_width="280dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="236dp"
+                android:background="@drawable/rounded_button2"
+                android:ems="10"
+                android:inputType="text"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/editTextText5"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/editTextText5"
+                app:layout_constraintTop_toBottomOf="@+id/editTextText4"
+                tools:ignore="Autofill,HardcodedText,LabelFor" />
+
+            <EditText
+                android:id="@+id/editTextText10"
+                android:layout_width="280dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/rounded_button2"
+                android:ems="10"
+                android:inputType="text"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/editTextText9"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/editTextText9"
+                app:layout_constraintTop_toBottomOf="@+id/editTextText9"
+                tools:ignore="Autofill,HardcodedText,LabelFor" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="72dp"
+                android:background="@drawable/rounded_button"
+                android:text="Submit"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/editTextText9"
+                app:layout_constraintHorizontal_bias="0.462"
+                app:layout_constraintStart_toStartOf="@+id/editTextText9"
+                app:layout_constraintTop_toBottomOf="@+id/editTextText9"
+                tools:ignore="HardcodedText" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
