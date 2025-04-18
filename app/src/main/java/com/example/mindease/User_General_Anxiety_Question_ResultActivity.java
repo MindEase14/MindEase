@@ -46,6 +46,7 @@ public class User_General_Anxiety_Question_ResultActivity extends AppCompatActiv
     private void initializeViews() {
         textView4 = findViewById(R.id.textView4);
         textView5 = findViewById(R.id.textView5);
+        proceedButton = findViewById(R.id.button1);
 
         questionTextViews = new TextView[]{
                 findViewById(R.id.textView9),
