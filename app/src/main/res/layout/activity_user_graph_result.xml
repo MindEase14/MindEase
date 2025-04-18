@@ -8,22 +8,35 @@
     android:layout_height="match_parent"
     tools:context=".User_Graph_ResultActivity">
 
-<!--    Nitz kani kay sa General Anxiety Test ni nga graph-->
-<!-- Ihawa na lng ning Graph 2 -->
-
+    <!-- LineChart for Set 1 -->
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/lineChart1"
+        android:id="@+id/lineChartSet1"
         android:layout_width="0dp"
         android:layout_height="300dp"
         android:layout_margin="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/lineChartSet2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.445"
+        app:layout_constraintVertical_bias="0.35"
         tools:ignore="MissingClass" />
 
+    <!-- LineChart for Set 2 -->
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChartSet2"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/button1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lineChartSet1"
+        app:layout_constraintVertical_bias="0.35"
+        tools:ignore="MissingClass" />
+
+    <!-- Button to navigate to the next screen -->
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
@@ -37,7 +50,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lineChart1"
+        app:layout_constraintTop_toBottomOf="@+id/lineChartSet2"
         app:layout_constraintVertical_bias="0.0"
         tools:ignore="HardcodedText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

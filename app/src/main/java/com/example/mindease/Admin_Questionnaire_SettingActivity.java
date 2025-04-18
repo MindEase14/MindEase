@@ -56,7 +56,7 @@ public class Admin_Questionnaire_SettingActivity extends AppCompatActivity {
         testAdapter.setDropDownViewResource(R.layout.spinner_item);
         spinnerTest.setAdapter(testAdapter);
 
-        // Test selection listener
+        // Test selection listener 
         spinnerTest.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {

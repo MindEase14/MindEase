@@ -24,6 +24,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import java.util.ArrayList;
 
 public class User_Graph_ResultActivity extends AppCompatActivity {
+    private ArrayList<String> allInputs = new ArrayList<>();
     private static final String TAG = "GraphActivity";
 
     @Override
@@ -32,31 +33,52 @@ public class User_Graph_ResultActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_user_graph_result);
 
+        // Initialize charts
+        LineChart chartSet1 = findViewById(R.id.lineChartSet1);
+        LineChart chartSet2 = findViewById(R.id.lineChartSet2);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+        // Get all inputs from intent
+        ArrayList<String> combinedInputs = getIntent().getStringArrayListExtra("allInputs");
+        if (combinedInputs != null) {
+            allInputs = combinedInputs;
+            Log.d(TAG, "Received inputs: " + allInputs.toString());
+        }
+
+        // Split the data into two sets
+        ArrayList<String> set1 = new ArrayList<>();
+        ArrayList<String> set2 = new ArrayList<>();
+
+        if (allInputs.size() >= 16) {
+            // First 7 items (0-6) for set1 (Q1-Q7)
+            set1 = new ArrayList<>(allInputs.subList(0, 7));
+            // Next 9 items (7-15) for set2 (Q8-Q16)
+            set2 = new ArrayList<>(allInputs.subList(7, 16));
+
+            Log.d(TAG, "Set1 (Q1-Q7): " + set1);
+            Log.d(TAG, "Set2 (Q8-Q16): " + set2);
+        } else {
+            Log.e(TAG, "Insufficient input data. Expected 16 items, got: " + allInputs.size());
+        }
+
+        // Process data for charts
+        ArrayList<Float> valuesSet1 = processData(set1, 7);
+        ArrayList<Float> valuesSet2 = processData(set2, 9);
+
+        // Setup charts separately
+        setupChart(chartSet1, valuesSet1, "Anxiety Assessment (Q1-Q7)", Color.parseColor("#BA68C8"));
+        setupChart(chartSet2, valuesSet2, "Depression Assessment (Q8-Q16)", Color.parseColor("#4DB6AC"));
+
         Button button1 = findViewById(R.id.button1);
-
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(User_Graph_ResultActivity.this, User_Mind_Health_Question_ResultActivity.class);
-                startActivity(intent);
-            }
+        button1.setOnClickListener(v -> {
+            Intent intent = new Intent(User_Graph_ResultActivity.this, Dashboard_StudentActivity.class);
+            startActivity(intent);
         });
-
-        // Initialize both line charts
-        LineChart lineChart1 = findViewById(R.id.lineChart1);
-
-        // Get data from previous activity
-        ArrayList<String> set1 = getIntent().getStringArrayListExtra("set1");
-        ArrayList<String> set2 = getIntent().getStringArrayListExtra("set2");
-
-        // Configure both charts
-        setupChart(lineChart1, processData(set1, 7), "Anxiety Assessment (Q1-Q7)", Color.parseColor("#BA68C8"));
     }
 
     private ArrayList<Float> processData(ArrayList<String> rawData, int expectedSize) {
@@ -110,7 +132,7 @@ public class User_Graph_ResultActivity extends AppCompatActivity {
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setGranularity(1f);
         leftAxis.setAxisMinimum(0f);
-        leftAxis.setAxisMaximum(3f);
+        leftAxis.setAxisMaximum(4f); // Increased to 4 to accommodate value 4
         leftAxis.setTextColor(Color.WHITE);
         chart.getAxisRight().setEnabled(false);
 

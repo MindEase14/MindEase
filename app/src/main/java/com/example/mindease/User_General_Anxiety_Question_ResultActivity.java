@@ -2,6 +2,7 @@ package com.example.mindease;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -14,10 +15,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class User_General_Anxiety_Question_ResultActivity extends AppCompatActivity {
+    private ArrayList<String> allInputs = new ArrayList<>();
+
 
     private TextView textView4, textView5;
     private TextView[] questionTextViews, answerTextViews, labelTextViews, interpretationTextViews;
@@ -37,10 +41,23 @@ public class User_General_Anxiety_Question_ResultActivity extends AppCompatActiv
         setupFirebaseReferences();
         fetchLatestRecord();
 
+        // all the inputs are being received in this block
+        ArrayList<String> combinedInputs = getIntent().getStringArrayListExtra("allInputs");
+        if (combinedInputs != null) {
+            allInputs = combinedInputs;
+            Log.d("GraphActivity", "All Inputs: " + allInputs.toString());
+        }
+
+
         proceedButton.setOnClickListener(v -> {
-            startActivity(new Intent(this, User_Mind_Health_Question_ResultActivity.class));
+            Intent intent = new Intent(this, User_Mind_Health_Question_ResultActivity.class);
+            intent.putStringArrayListExtra("allInputs", allInputs); // Attach the combined inputs
+            startActivity(intent);
             finish();
         });
+
+
+
     }
 
     private void initializeViews() {

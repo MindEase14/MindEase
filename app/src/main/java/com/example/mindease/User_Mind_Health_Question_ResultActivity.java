@@ -11,7 +11,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
+
 public class User_Mind_Health_Question_ResultActivity extends AppCompatActivity {
+    private ArrayList<String> allInputs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,14 +26,23 @@ public class User_Mind_Health_Question_ResultActivity extends AppCompatActivity 
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // all the inputs are being received in this block
+        ArrayList<String> combinedInputs = getIntent().getStringArrayListExtra("allInputs");
+        if (combinedInputs != null) {
+            allInputs = combinedInputs;
+        }
+
         Button button1 = findViewById(R.id.button1);
 
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(User_Mind_Health_Question_ResultActivity.this, User_Mind_Health_Graph_ResultActivity.class);
+                Intent intent = new Intent(User_Mind_Health_Question_ResultActivity.this, User_Graph_ResultActivity.class);
+                intent.putStringArrayListExtra("allInputs", allInputs); // Pass combined inputs
                 startActivity(intent);
             }
         });
+
     }
 }

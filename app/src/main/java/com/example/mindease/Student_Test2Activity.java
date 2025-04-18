@@ -150,9 +150,9 @@ public class Student_Test2Activity extends AppCompatActivity {
     }
 
     private ArrayList<String> appendInputs() {
-        inputs.add(String.valueOf(spinner5.getSelectedItemPosition()));
-        inputs.add(String.valueOf(spinner6.getSelectedItemPosition()));
-        inputs.add(String.valueOf(spinner7.getSelectedItemPosition()));
+        inputs.add(String.valueOf(spinner5.getSelectedItemPosition() - 1)); // Subtract 1
+        inputs.add(String.valueOf(spinner6.getSelectedItemPosition() - 1)); // Subtract 1
+        inputs.add(String.valueOf(spinner7.getSelectedItemPosition() - 1)); // Subtract 1
         return inputs;
     }
 

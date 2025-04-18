@@ -33,6 +33,8 @@ import java.util.Map;
 import java.util.Random;
 
 public class Student_Test5Activity extends AppCompatActivity {
+    private ArrayList<String> allInputs = new ArrayList<>();
+
     private ArrayList<String> textInputs = new ArrayList<>();
     private ArrayList<String> textInputs2ndSetQuestion = new ArrayList<>();
     private Spinner spinner7, spinner8, spinner9;
@@ -83,9 +85,12 @@ public class Student_Test5Activity extends AppCompatActivity {
                 finalEvaluation2 = getFinalEvaluation(textBoxes2);
 
                 storeResultsInFirebase(finalEvaluation1, finalEvaluation2, () -> {
-                    startActivity(new Intent(Student_Test5Activity.this, User_General_Anxiety_Question_ResultActivity.class));
+                    Intent resultIntent = new Intent(Student_Test5Activity.this, User_General_Anxiety_Question_ResultActivity.class);
+                    resultIntent.putStringArrayListExtra("allInputs", allInputs); // Passing combined inputs
+                    startActivity(resultIntent);
                     finish();
                 });
+
             } else {
                 Toast.makeText(this, "Please correct the inputs", Toast.LENGTH_SHORT).show();
             }
@@ -151,7 +156,13 @@ public class Student_Test5Activity extends AppCompatActivity {
         textInputs2ndSetQuestion.add(String.valueOf(spinner7.getSelectedItemPosition() - 1));
         textInputs2ndSetQuestion.add(String.valueOf(spinner8.getSelectedItemPosition() - 1));
         textInputs2ndSetQuestion.add(String.valueOf(spinner9.getSelectedItemPosition() - 1));
+
+        // Combine both input sets
+        allInputs.clear();
+        allInputs.addAll(textInputs);
+        allInputs.addAll(textInputs2ndSetQuestion);
     }
+
 
     private boolean validateSelections() {
         if (spinner7.getSelectedItemPosition() == 0) { showToast("Select option for Q7"); return false; }
