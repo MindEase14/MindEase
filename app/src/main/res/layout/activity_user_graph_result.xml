@@ -8,16 +8,19 @@
     android:layout_height="match_parent"
     tools:context=".User_Graph_ResultActivity">
 
+<!--    Nitz kani kay sa General Anxiety Test ni nga graph-->
+<!-- Ihawa na lng ning Graph 2 -->
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChart2"
-        android:layout_width="0dp"
-        android:layout_height="300dp"
+        android:layout_width="297dp"
+        android:layout_height="89dp"
         android:layout_margin="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.962"
+        app:layout_constraintEnd_toEndOf="@+id/lineChart1"
+        app:layout_constraintHorizontal_bias="0.646"
+        app:layout_constraintStart_toStartOf="@+id/lineChart1"
+        app:layout_constraintTop_toBottomOf="@+id/lineChart1"
+        app:layout_constraintVertical_bias="0.141"
         tools:ignore="MissingClass" />
 
     <com.github.mikephil.charting.charts.LineChart
@@ -27,9 +30,26 @@
         android:layout_margin="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.781"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.085"
+        app:layout_constraintVertical_bias="0.445"
         tools:ignore="MissingClass" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="152dp"
+        android:background="@drawable/rounded_button"
+        android:text="Next"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lineChart1"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="HardcodedText" />
 </androidx.constraintlayout.widget.ConstraintLayout>
