@@ -46,21 +46,21 @@
                 android:id="@+id/textView2"
                 android:layout_width="303dp"
                 android:layout_height="34dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="40dp"
                 android:text=""
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="@+id/textView1"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/imageView4"
-                app:layout_constraintTop_toBottomOf="@+id/imageView4"
+                app:layout_constraintTop_toBottomOf="@+id/textView80"
                 tools:ignore="HardcodedText,MissingConstraints" />
 
             <TextView
                 android:id="@+id/textView6"
                 android:layout_width="306dp"
                 android:layout_height="31dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:text=""
                 android:textColor="@color/white"
                 android:textSize="15sp"
@@ -190,6 +190,20 @@
                 app:layout_constraintHorizontal_bias="0.473"
                 app:layout_constraintStart_toStartOf="@+id/spinner3"
                 app:layout_constraintTop_toBottomOf="@+id/spinner3" />
+
+            <TextView
+                android:id="@+id/textView80"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Mind Health Test"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/textView1"
+                app:layout_constraintStart_toStartOf="@+id/textView1"
+                app:layout_constraintTop_toBottomOf="@+id/textView1" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
