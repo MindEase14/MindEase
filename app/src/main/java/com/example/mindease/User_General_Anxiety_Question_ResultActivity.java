@@ -4,18 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.google.firebase.database.*;
 
 public class User_General_Anxiety_Question_ResultActivity extends AppCompatActivity {
 
@@ -114,8 +105,38 @@ public class User_General_Anxiety_Question_ResultActivity extends AppCompatActiv
         Long eval1 = record.child("finalEvaluation1").getValue(Long.class);
         Long eval2 = record.child("finalEvaluation2").getValue(Long.class);
 
-        textView4.setText(getLabelForScore(eval1 != null ? eval1.intValue() : 0));
-        textView5.setText(getLabelForScore(eval2 != null ? eval2.intValue() : 0));
+        int evaluation1 = (eval1 != null ? eval1.intValue() : 0);
+        int evaluation2 = (eval2 != null ? eval2.intValue() : 0);
+
+        int adjustedEval1 = evaluation1 > 0 ? evaluation1 - 1 : 0;
+        int adjustedEval2 = evaluation2 > 0 ? evaluation2 - 1 : 0;
+
+        fetchEvaluationText("generalAnxietyTestSetting", adjustedEval1, textView4, 1);
+        fetchEvaluationText("mindHealthTestSetting", adjustedEval2, textView5, 2);
+    }
+
+    private void fetchEvaluationText(String settingPath, int evaluationIndex, TextView textView, int evaluationNumber) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(settingPath);
+        ref.orderByChild("status").equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot config : snapshot.getChildren()) {
+                        String value = config.child(String.valueOf(evaluationIndex)).getValue(String.class);
+                        String displayText = "Evaluation " + evaluationNumber + ": " + (value != null ? value : "N/A");
+                        textView.setText(displayText);
+                        return; // Exit after first active config
+                    }
+                } else {
+                    textView.setText("Evaluation " + evaluationNumber + ": N/A");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                textView.setText("Evaluation " + evaluationNumber + ": Error");
+            }
+        });
     }
 
     private void fetchActiveQuestions(DataSnapshot record) {
@@ -137,13 +158,14 @@ public class User_General_Anxiety_Question_ResultActivity extends AppCompatActiv
     }
 
     private void updateQuestionTexts(DataSnapshot config, DataSnapshot record) {
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < questionTextViews.length; i++) {
             String questionKey = "q" + (i + 1);
             String answerKey = "set1_question" + (i + 1);
             String answer = record.child(answerKey).getValue(String.class);
 
             String question = config.child(questionKey).getValue(String.class);
-            int score = answer != null ? Integer.parseInt(answer) : 0;
+            int rawScore = answer != null ? Integer.parseInt(answer) : 0;
+            int score = Math.min(3, rawScore);
 
             questionTextViews[i].setText(question != null ? question : "Question " + (i + 1));
             answerTextViews[i].setText(String.valueOf(score));
