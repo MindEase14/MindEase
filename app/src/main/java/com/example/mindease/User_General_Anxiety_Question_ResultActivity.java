@@ -145,10 +145,10 @@ public class User_General_Anxiety_Question_ResultActivity extends AppCompatActiv
 
     private String getLabelForScore(int score) {
         switch (score) {
-            case 0: return "Not at all";
-            case 1: return "Several days";
-            case 2: return "More than half the days";
-            case 3: return "Nearly every day";
+            case 1: return "Not at all";
+            case 2: return "Several days";
+            case 3: return "More than half the days";
+            case 4: return "Nearly every day";
             default: return "N/A";
         }
     }
