@@ -29,7 +29,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/logo" />
 
-
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
@@ -49,7 +48,7 @@
                 android:layout_height="37dp"
                 android:layout_marginTop="40dp"
                 android:layout_marginEnd="28dp"
-                android:text="7. Trouble concentrating on things, such as reading the newspaper or watching television"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -58,87 +57,68 @@
                 app:layout_constraintTop_toBottomOf="@+id/imageView4"
                 tools:ignore="HardcodedText" />
 
-            <EditText
-                android:id="@+id/editTextText11"
-                android:layout_width="335dp"
-                android:layout_height="37dp"
+            <Spinner
+                android:id="@+id/spinner7"
+                android:layout_width="312dp"
+                android:layout_height="33dp"
                 android:layout_marginTop="32dp"
-                android:background="@drawable/rounded_button2"
-                android:ems="10"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:text=""
-                android:textColor="@color/black"
-                android:textSize="16sp"
+                android:background="@color/white"
+                android:entries="@array/spinner_options"
+                android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="@+id/textView26"
-                app:layout_constraintHorizontal_bias="0.437"
                 app:layout_constraintStart_toStartOf="@+id/textView26"
-                app:layout_constraintTop_toBottomOf="@+id/textView26"
-                tools:ignore="LabelFor" />
+                app:layout_constraintTop_toBottomOf="@+id/textView26" />
 
             <TextView
                 android:id="@+id/textView27"
-                android:layout_width="322dp"
-                android:layout_height="77dp"
+                android:layout_width="328dp"
+                android:layout_height="70dp"
                 android:layout_marginTop="32dp"
-                android:text="8. Moving or speaking so slowly that other people could have noticed, or the opposite – being so fidgety or restless that you have been moving around a lost more than usual"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="@+id/textView26"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/textView26"
-                app:layout_constraintTop_toBottomOf="@+id/editTextText11"
+                app:layout_constraintTop_toBottomOf="@+id/spinner7"
                 tools:ignore="HardcodedText" />
 
-            <EditText
-                android:id="@+id/editTextText12"
-                android:layout_width="335dp"
-                android:layout_height="37dp"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/rounded_button2"
-                android:ems="10"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:text=""
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="@+id/editTextText11"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/editTextText11"
-                app:layout_constraintTop_toBottomOf="@+id/textView27"
-                tools:ignore="LabelFor" />
+            <Spinner
+                android:id="@+id/spinner8"
+                android:layout_width="312dp"
+                android:layout_height="33dp"
+                android:layout_marginTop="28dp"
+                android:background="@color/white"
+                android:textAlignment="center"
+                android:entries="@array/spinner_options"
+                app:layout_constraintEnd_toEndOf="@+id/spinner7"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/spinner7"
+                app:layout_constraintTop_toBottomOf="@+id/textView27" />
 
             <TextView
                 android:id="@+id/textView28"
-                android:layout_width="353dp"
-                android:layout_height="46dp"
+                android:layout_width="320dp"
+                android:layout_height="44dp"
                 android:layout_marginTop="24dp"
-                android:text="9. Thoughts that you would be better off dead or off hurting yourself in someway"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="@+id/textView27"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/textView27"
-                app:layout_constraintTop_toBottomOf="@+id/editTextText12"
+                app:layout_constraintTop_toBottomOf="@+id/spinner8"
                 tools:ignore="HardcodedText" />
 
-            <EditText
-                android:id="@+id/editTextText13"
-                android:layout_width="335dp"
-                android:layout_height="37dp"
+            <Spinner
+                android:id="@+id/spinner9"
+                android:layout_width="312dp"
+                android:layout_height="33dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/rounded_button2"
-                android:ems="10"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:text=""
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="@+id/editTextText12"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/editTextText12"
-                app:layout_constraintTop_toBottomOf="@+id/textView28"
-                tools:ignore="LabelFor" />
+                android:background="@color/white"
+                android:textAlignment="center"
+                android:entries="@array/spinner_options"
+                app:layout_constraintEnd_toEndOf="@+id/spinner8"
+                app:layout_constraintStart_toStartOf="@+id/spinner8"
+                app:layout_constraintTop_toBottomOf="@+id/textView28" />
 
             <Button
                 android:id="@+id/button9"
@@ -149,10 +129,9 @@
                 android:text="@string/submit"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="@+id/editTextText13"
-                app:layout_constraintStart_toStartOf="@+id/editTextText13"
-                app:layout_constraintTop_toBottomOf="@+id/editTextText13" />
-
+                app:layout_constraintEnd_toEndOf="@+id/spinner9"
+                app:layout_constraintStart_toStartOf="@+id/spinner9"
+                app:layout_constraintTop_toBottomOf="@+id/spinner9" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

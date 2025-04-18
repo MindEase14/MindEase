@@ -1,126 +1,187 @@
 package com.example.mindease;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class Student_TestActivity extends AppCompatActivity {
-    private EditText editText1, editText2, editText3, editText4;
-    String uid = "";
+
+    private Spinner spinner1, spinner2, spinner3, spinner4;
+    private TextView textView15, textView21, textView22, textView23, textView16, textView18, textView19, textView20;
+    private String uid = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_student_test); // Set the layout first
+        setContentView(R.layout.activity_student_test);
 
-        // Initialize EditText fields after setContentView()
-        editText1 = findViewById(R.id.editTextText);
-        editText2 = findViewById(R.id.editTextText2);
-        editText3 = findViewById(R.id.editTextText3);
-        editText4 = findViewById(R.id.editTextText4);
+        // Retrieve uid from Intent
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            uid = extras.getString("uid", "");
+        }
 
-        // Add TextWatchers to each EditText
-        addTextWatcher(editText1);
-        addTextWatcher(editText2);
-        addTextWatcher(editText3);
-        addTextWatcher(editText4);
+        initializeViews();
+        initializeSpinners();
+        setupFirebase();
+        setupSubmitButton();
+    }
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+    private void initializeViews() {
+        spinner1 = findViewById(R.id.spinner1);
+        spinner2 = findViewById(R.id.spinner2);
+        spinner3 = findViewById(R.id.spinner3);
+        spinner4 = findViewById(R.id.spinner4);
 
-        Button button4 = findViewById(R.id.button4); // Find button by its ID
+        textView15 = findViewById(R.id.textView15);
+        textView21 = findViewById(R.id.textView21);
+        textView22 = findViewById(R.id.textView22);
+        textView23 = findViewById(R.id.textView23);
+        textView16 = findViewById(R.id.textView16);
+        textView18 = findViewById(R.id.textView18);
+        textView19 = findViewById(R.id.textView19);
+        textView20 = findViewById(R.id.textView20);
+    }
 
-        button4.setOnClickListener(new View.OnClickListener() {
+    private void initializeSpinners() {
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
+                this,
+                R.layout.custom_spinner_item,
+                getResources().getStringArray(R.array.spinner_options)
+        ) {
+            @NonNull
             @Override
-            public void onClick(View v) {
-                // Check if all inputs are valid before proceeding
-                if (validateInput(editText1) && validateInput(editText2) && validateInput(editText3) && validateInput(editText4)) {
-                    // If all inputs are valid, append inputs and start the next activity
-                    ArrayList<String> inputs = appendInputs();
-                    Intent intent = new Intent(Student_TestActivity.this, Student_Test2Activity.class);
-                    intent.putExtra("inputs", inputs); // Pass the array to the next activity
-                    intent.putExtra("uid", uid); // Pass the email to the next activity
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(Student_TestActivity.this, "Please correct the inputs", Toast.LENGTH_SHORT).show();
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView view = (TextView) super.getView(position, convertView, parent);
+                view.setTextColor(Color.BLACK);
+                return view;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                TextView view = (TextView) super.getDropDownView(position, convertView, parent);
+                view.setTextColor(Color.BLACK);
+                return view;
+            }
+        };
+
+        adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+
+        spinner1.setAdapter(adapter);
+        spinner2.setAdapter(adapter);
+        spinner3.setAdapter(adapter);
+        spinner4.setAdapter(adapter);
+    }
+
+    private void setupFirebase() {
+        DatabaseReference testSettingsRef = FirebaseDatabase.getInstance().getReference()
+                .child("generalAnxietyTestSetting");
+
+        testSettingsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                DataSnapshot activeLabelConfig = findActiveConfig(snapshot);
+
+                if (activeLabelConfig == null) {
+                    showErrorAndFinish("No active label configuration found");
+                    return;
+                }
+
+                try {
+                    textView15.setText("0 = \"" + activeLabelConfig.child("0").getValue(String.class) + "\"");
+                    textView21.setText("1 = \"" + activeLabelConfig.child("1").getValue(String.class) + "\"");
+                    textView22.setText("2 = \"" + activeLabelConfig.child("2").getValue(String.class) + "\"");
+                    textView23.setText("3 = \"" + activeLabelConfig.child("3").getValue(String.class) + "\"");
+                } catch (Exception e) {
+                    showErrorAndFinish("Error loading labels");
                 }
             }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                showErrorAndFinish("Label config error: " + error.getMessage());
+            }
+        });
+
+        DatabaseReference questionSettingsRef = FirebaseDatabase.getInstance().getReference()
+                .child("generalAnxietyQuestionSetting");
+
+        questionSettingsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                DataSnapshot activeQuestionConfig = findActiveConfig(snapshot);
+
+                if (activeQuestionConfig == null) {
+                    showErrorAndFinish("No active question configuration found");
+                    return;
+                }
+
+                try {
+                    textView16.setText("1. " + activeQuestionConfig.child("q1").getValue(String.class));
+                    textView18.setText("2. " + activeQuestionConfig.child("q2").getValue(String.class));
+                    textView19.setText("3. " + activeQuestionConfig.child("q3").getValue(String.class));
+                    textView20.setText("4. " + activeQuestionConfig.child("q4").getValue(String.class));
+                } catch (Exception e) {
+                    showErrorAndFinish("Error loading questions");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                showErrorAndFinish("Question config error: " + error.getMessage());
+            }
         });
     }
 
-    private ArrayList<String> appendInputs() {
-        ArrayList<String> inputs = new ArrayList<>(); // Create a new array to store the inputs
-        inputs.add(editText1.getText().toString());
-        inputs.add(editText2.getText().toString());
-        inputs.add(editText3.getText().toString());
-        inputs.add(editText4.getText().toString());
-        return inputs;
+    private DataSnapshot findActiveConfig(DataSnapshot snapshot) {
+        for (DataSnapshot config : snapshot.getChildren()) {
+            if (config.hasChild("status") &&
+                    Boolean.TRUE.equals(config.child("status").getValue(Boolean.class))) {
+                return config;
+            }
+        }
+        return null;
     }
 
-    private boolean validateInput(EditText inputBox) {
-        String input = inputBox.getText().toString().trim();
+    private void setupSubmitButton() {
+        Button button4 = findViewById(R.id.button4);
+        button4.setOnClickListener(v -> {
+            ArrayList<String> inputs = new ArrayList<>();
+            inputs.add(spinner1.getSelectedItem().toString());
+            inputs.add(spinner2.getSelectedItem().toString());
+            inputs.add(spinner3.getSelectedItem().toString());
+            inputs.add(spinner4.getSelectedItem().toString());
 
-        // Check if the input is empty
-        if (input.isEmpty()) {
-            inputBox.setError("Field cannot be empty");
-            return false;
-        }
-
-        // Check if the input is a number
-        try {
-            int number = Integer.parseInt(input);
-
-            // Check if the number is between 0 and 3 (inclusive)
-            if (number < 0 || number > 3) {
-                inputBox.setError("Input must be 0, 1, 2, or 3");
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            // If the input is not a number, show an error
-            inputBox.setError("Input must be a number");
-            return false;
-        }
-
-        // Clear any previous error
-        inputBox.setError(null);
-        return true; // Input is valid
-    }
-
-    private void addTextWatcher(EditText editText) {
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // Not needed
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Validate input on every key press
-                validateInput(editText);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                // Not needed
-            }
+            Intent intent = new Intent(this, Student_Test2Activity.class);
+            intent.putStringArrayListExtra("inputs", inputs);
+            intent.putExtra("uid", uid);
+            startActivity(intent);
         });
+    }
+
+    private void showErrorAndFinish(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        finish();
     }
 }

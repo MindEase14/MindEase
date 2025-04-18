@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="@color/black"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".Student_Test2Activity">
 
     <ScrollView
@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <!-- Logo Image -->
             <ImageView
                 android:id="@+id/imageView4"
                 android:layout_width="128dp"
@@ -29,7 +30,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/logo" />
 
-
+            <!-- MindEase Title -->
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
@@ -43,115 +44,110 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <!-- Question 5 -->
             <TextView
                 android:id="@+id/textView17"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="48dp"
-                android:text="5. Being so restless that it's hard to sit still"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="15sp"
-                app:layout_constraintEnd_toEndOf="@+id/textView2"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/imageView4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView4"
                 tools:ignore="HardcodedText" />
 
-            <EditText
-                android:id="@+id/editTextText5"
-                android:layout_width="335dp"
-                android:layout_height="37dp"
-                android:layout_marginTop="36dp"
-                android:background="@drawable/rounded_button2"
-                android:ems="10"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:text=""
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+            <!-- Spinner 5 -->
+            <Spinner
+                android:id="@+id/spinner5"
+                android:layout_width="312dp"
+                android:layout_height="33dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/white"
+                android:spinnerMode="dropdown"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="@+id/textView17"
                 app:layout_constraintStart_toStartOf="@+id/textView17"
-                app:layout_constraintTop_toBottomOf="@+id/textView17"
-                tools:ignore="LabelFor" />
+                app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
+            <!-- Question 6 -->
             <TextView
                 android:id="@+id/textView21"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="6. Becoming easily annoyed or irritable"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="15sp"
-                app:layout_constraintEnd_toEndOf="@+id/textView17"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/textView17"
-                app:layout_constraintTop_toBottomOf="@+id/editTextText5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinner5"
                 tools:ignore="HardcodedText" />
 
-            <EditText
-                android:id="@+id/editTextText6"
-                android:layout_width="335dp"
-                android:layout_height="37dp"
-                android:layout_marginTop="28dp"
-                android:background="@drawable/rounded_button2"
-                android:ems="10"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:text=""
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="@+id/editTextText5"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/editTextText5"
-                app:layout_constraintTop_toBottomOf="@+id/textView21"
-                tools:ignore="LabelFor" />
+            <!-- Spinner 6 -->
+            <Spinner
+                android:id="@+id/spinner6"
+                android:layout_width="312dp"
+                android:layout_height="33dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
+                android:spinnerMode="dropdown"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="@+id/textView21"
+                app:layout_constraintStart_toStartOf="@+id/textView21"
+                app:layout_constraintTop_toBottomOf="@+id/textView21" />
 
+            <!-- Question 7 -->
             <TextView
                 android:id="@+id/textView22"
-                android:layout_width="308dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="24dp"
-                android:text="7. Feeling afraid as if something awful might happen"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="15sp"
-                app:layout_constraintEnd_toEndOf="@+id/editTextText6"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/textView21"
-                app:layout_constraintTop_toBottomOf="@+id/editTextText6"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinner6"
                 tools:ignore="HardcodedText" />
 
-            <EditText
-                android:id="@+id/editTextText7"
-                android:layout_width="335dp"
-                android:layout_height="37dp"
-                android:layout_marginTop="28dp"
-                android:background="@drawable/rounded_button2"
-                android:ems="10"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:text=""
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="@+id/editTextText6"
-                app:layout_constraintHorizontal_bias="0.0"
+            <!-- Spinner 7 -->
+            <Spinner
+                android:id="@+id/spinner7"
+                android:layout_width="312dp"
+                android:layout_height="33dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/white"
+                android:spinnerMode="dropdown"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="@+id/textView22"
                 app:layout_constraintStart_toStartOf="@+id/textView22"
-                app:layout_constraintTop_toBottomOf="@+id/textView22"
-                tools:ignore="LabelFor" />
+                app:layout_constraintTop_toBottomOf="@+id/textView22" />
 
+            <!-- Next Button -->
             <Button
                 android:id="@+id/button5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="96dp"
+                android:layout_width="119dp"
+                android:layout_height="39dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="32dp"
                 android:background="@drawable/rounded_button"
                 android:text="Next"
                 android:textColor="@color/white"
                 android:textSize="17sp"
-                app:layout_constraintEnd_toEndOf="@+id/editTextText7"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/editTextText7"
-                app:layout_constraintTop_toBottomOf="@+id/editTextText7"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinner7"
                 tools:ignore="HardcodedText" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
