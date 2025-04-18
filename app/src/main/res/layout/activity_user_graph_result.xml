@@ -10,18 +10,6 @@
 
 <!--    Nitz kani kay sa General Anxiety Test ni nga graph-->
 <!-- Ihawa na lng ning Graph 2 -->
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/lineChart2"
-        android:layout_width="297dp"
-        android:layout_height="89dp"
-        android:layout_margin="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/lineChart1"
-        app:layout_constraintHorizontal_bias="0.646"
-        app:layout_constraintStart_toStartOf="@+id/lineChart1"
-        app:layout_constraintTop_toBottomOf="@+id/lineChart1"
-        app:layout_constraintVertical_bias="0.141"
-        tools:ignore="MissingClass" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChart1"

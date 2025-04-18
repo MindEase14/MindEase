@@ -50,7 +50,6 @@ public class User_Graph_ResultActivity extends AppCompatActivity {
 
         // Initialize both line charts
         LineChart lineChart1 = findViewById(R.id.lineChart1);
-        LineChart lineChart2 = findViewById(R.id.lineChart2);
 
         // Get data from previous activity
         ArrayList<String> set1 = getIntent().getStringArrayListExtra("set1");
@@ -58,7 +57,6 @@ public class User_Graph_ResultActivity extends AppCompatActivity {
 
         // Configure both charts
         setupChart(lineChart1, processData(set1, 7), "Anxiety Assessment (Q1-Q7)", Color.parseColor("#BA68C8"));
-        setupChart(lineChart2, processData(set2, 9), "Mental Health Assessment (Q1-Q9)", Color.parseColor("#4CAF50"));
     }
 
     private ArrayList<Float> processData(ArrayList<String> rawData, int expectedSize) {

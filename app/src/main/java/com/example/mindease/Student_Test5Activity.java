@@ -1,7 +1,6 @@
 package com.example.mindease;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -41,10 +39,6 @@ public class Student_Test5Activity extends AppCompatActivity {
     private TextView textView26, textView27, textView28;
     String uid = "";
     private int finalEvaluation1, finalEvaluation2;
-
-    interface FirebaseCallback {
-        void onCallback(Map<Integer, String> resultMap);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +81,11 @@ public class Student_Test5Activity extends AppCompatActivity {
                 String[] textBoxes2 = textInputs2ndSetQuestion.toArray(new String[0]);
                 finalEvaluation1 = getFinalEvaluation(textBoxes);
                 finalEvaluation2 = getFinalEvaluation(textBoxes2);
-                fetchAndDisplayResults();
+
+                storeResultsInFirebase(finalEvaluation1, finalEvaluation2, () -> {
+                    startActivity(new Intent(Student_Test5Activity.this, User_General_Anxiety_Question_ResultActivity.class));
+                    finish();
+                });
             } else {
                 Toast.makeText(this, "Please correct the inputs", Toast.LENGTH_SHORT).show();
             }
@@ -169,65 +167,6 @@ public class Student_Test5Activity extends AppCompatActivity {
             }
         }
         return null;
-    }
-
-    private void fetchAndDisplayResults() {
-        final StringBuilder message = new StringBuilder();
-        fetchGeneralAnxietyTestSetting(anxietyMap -> {
-            fetchMindHealthTestSetting(mindHealthMap -> {
-                String eval1Str = anxietyMap != null && finalEvaluation1 >= 1 && finalEvaluation1 <= 4 ? anxietyMap.get(finalEvaluation1 - 1) : "N/A";
-                String eval2Str = mindHealthMap != null && finalEvaluation2 >= 1 && finalEvaluation2 <= 4 ? mindHealthMap.get(finalEvaluation2 - 1) : "N/A";
-                message.append("Evaluation 1: ").append(eval1Str).append("\nEvaluation 2: ").append(eval2Str).append("\n\n");
-                message.append("Set 1 (Anxiety)\n");
-                for (int i = 0; i < textInputs.size(); i++) message.append("Q").append(i+1).append(": ").append(textInputs.get(i)).append("\n");
-                message.append("\nSet 2 (Mental Health)\n");
-                for (int i = 0; i < 8; i++) message.append("Q").append(i+1).append(": ").append(textInputs2ndSetQuestion.get(i)).append("\n");
-                new AlertDialog.Builder(Student_Test5Activity.this)
-                        .setTitle("Results")
-                        .setMessage(message.toString())
-                        .setPositiveButton("OK", (dialog, id) -> {
-                            storeResultsInFirebase(finalEvaluation1, finalEvaluation2);
-                            startActivity(new Intent(Student_Test5Activity.this, User_Graph_ResultActivity.class));
-                            dialog.dismiss();
-                        }).show();
-            });
-        });
-    }
-
-    private void fetchGeneralAnxietyTestSetting(final FirebaseCallback callback) {
-        FirebaseDatabase.getInstance().getReference("generalAnxietyTestSetting")
-                .orderByChild("status").equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            Map<Integer, String> valueMap = new HashMap<>();
-                            for (int i = 0; i < 4; i++) valueMap.put(i, snapshot.child(String.valueOf(i)).getValue(String.class));
-                            callback.onCallback(valueMap);
-                            return;
-                        }
-                        callback.onCallback(null);
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError error) { callback.onCallback(null); }
-                });
-    }
-
-    private void fetchMindHealthTestSetting(final FirebaseCallback callback) {
-        FirebaseDatabase.getInstance().getReference("mindHealthTestSetting")
-                .orderByChild("status").equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            Map<Integer, String> valueMap = new HashMap<>();
-                            for (int i = 0; i < 4; i++) valueMap.put(i, snapshot.child(String.valueOf(i)).getValue(String.class));
-                            callback.onCallback(valueMap);
-                            return;
-                        }
-                        callback.onCallback(null);
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError error) { callback.onCallback(null); }
-                });
     }
 
     private int getFinalEvaluation(String[] responses) {
@@ -336,7 +275,7 @@ public class Student_Test5Activity extends AppCompatActivity {
         return maxDiff;
     }
 
-    private void storeResultsInFirebase(int eval1, int eval2) {
+    private void storeResultsInFirebase(int eval1, int eval2, Runnable onSuccess) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("records/" + uid);
         String key = ref.push().getKey();
         Map<String, Object> data = new HashMap<>();
@@ -346,7 +285,12 @@ public class Student_Test5Activity extends AppCompatActivity {
         for (int i = 0; i < textInputs.size(); i++) data.put("set1_question" + (i+1), textInputs.get(i));
         for (int i = 0; i < textInputs2ndSetQuestion.size(); i++) data.put("set2_question" + (i+1), textInputs2ndSetQuestion.get(i));
         ref.child(key).setValue(data)
-                .addOnSuccessListener(v -> Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(v -> {
+                    Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT).show();
+                    if (onSuccess != null) {
+                        onSuccess.run();
+                    }
+                })
                 .addOnFailureListener(e -> Toast.makeText(this, "Save failed", Toast.LENGTH_SHORT).show());
     }
 
