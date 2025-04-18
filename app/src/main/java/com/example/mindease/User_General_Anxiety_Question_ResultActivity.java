@@ -1,6 +1,8 @@
 package com.example.mindease;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +23,7 @@ public class User_General_Anxiety_Question_ResultActivity extends AppCompatActiv
     private TextView[] questionTextViews, answerTextViews, labelTextViews, interpretationTextViews;
     private DatabaseReference recordsRef, questionSettingsRef;
     private String uid;
+    private Button proceedButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,11 @@ public class User_General_Anxiety_Question_ResultActivity extends AppCompatActiv
         initializeViews();
         setupFirebaseReferences();
         fetchLatestRecord();
+
+        proceedButton.setOnClickListener(v -> {
+            startActivity(new Intent(this, User_Mind_Health_Question_ResultActivity.class));
+            finish();
+        });
     }
 
     private void initializeViews() {
@@ -145,10 +153,10 @@ public class User_General_Anxiety_Question_ResultActivity extends AppCompatActiv
 
     private String getLabelForScore(int score) {
         switch (score) {
-            case 1: return "Not at all";
-            case 2: return "Several days";
-            case 3: return "More than half the days";
-            case 4: return "Nearly every day";
+            case 0: return "Not at all";
+            case 1: return "Several days";
+            case 2: return "More than half the days";
+            case 3: return "Nearly every day";
             default: return "N/A";
         }
     }
