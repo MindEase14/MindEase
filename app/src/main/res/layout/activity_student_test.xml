@@ -30,22 +30,22 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/logo" />
 
+            <!-- Question 1 -->
+
+            <!-- Question 2 -->
+
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="92dp"
-                android:layout_marginEnd="108dp"
+                android:layout_marginEnd="92dp"
                 android:text="@string/mindease"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <!-- Question 1 -->
-
-            <!-- Question 2 -->
 
             <TextView
                 android:id="@+id/textView15"
@@ -233,7 +233,7 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="@+id/textView2"
-                app:layout_constraintHorizontal_bias="0.56"
+                app:layout_constraintHorizontal_bias="0.406"
                 app:layout_constraintStart_toStartOf="@+id/textView2"
                 app:layout_constraintTop_toBottomOf="@+id/textView2"
                 tools:ignore="HardcodedText" />
